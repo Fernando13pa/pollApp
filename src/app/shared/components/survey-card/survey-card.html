@@ -1,0 +1,25 @@
+<article class="survey-card" [class.survey-card--urgent]="compact()">
+  <div class="survey-card__content">
+    <span class="status-pill">{{ survey().tag }}</span>
+    <h3>{{ survey().title }}</h3>
+    <p>{{ survey().description }}</p>
+  </div>
+
+  @if (compact()) {
+    <footer>
+      <span>{{ survey().deadline }}</span>
+      <a class="icon-link" [routerLink]="['/survey', survey().id]" aria-label="Open survey">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8.6 5.6L15 12l-6.4 6.4" />
+        </svg>
+      </a>
+    </footer>
+  } @else {
+    <div class="survey-card__meta">
+      <span>{{ survey().deadline }}</span>
+      <div class="mini-progress" aria-label="Participation">
+        <span [style.width.%]="survey().progress"></span>
+      </div>
+    </div>
+  }
+</article>

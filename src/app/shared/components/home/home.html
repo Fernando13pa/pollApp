@@ -1,0 +1,47 @@
+<main class="poll-page">
+  <section class="hero-shell" aria-labelledby="home-title">
+    <div class="app-frame app-frame--home">
+      <section class="home-grid" id="active" aria-labelledby="home-title">
+        <div class="home-copy">
+          <p class="eyebrow">Active polling workspace</p>
+          <h1 id="home-title">Choose, vote, decide.</h1>
+          <p>
+            Keep urgent surveys visible, compare current polls, and open the next
+            decision without losing the overview.
+          </p>
+        </div>
+
+        <aside class="urgent-panel" aria-labelledby="urgent-title">
+          <div class="section-heading">
+            <p class="eyebrow">Soon ending</p>
+            <h2 id="urgent-title">Urgent surveys</h2>
+          </div>
+
+          <div class="survey-stack survey-stack--compact">
+            @for (survey of surveyService.urgentSurveys(); track survey.id) {
+              <app-survey-card [survey]="survey" [compact]="true"></app-survey-card>
+            }
+          </div>
+        </aside>
+      </section>
+
+      <section class="survey-board" aria-labelledby="survey-list-title">
+        <div class="section-heading">
+          <p class="eyebrow">Overview</p>
+          <h2 id="survey-list-title">All surveys</h2>
+        </div>
+
+        <div class="tabs" aria-label="Survey filter">
+          <button class="tab tab--active" type="button">Current Survey</button>
+          <button class="tab" type="button">Past Survey</button>
+        </div>
+
+        <div class="survey-stack">
+          @for (survey of surveyService.surveys(); track survey.id) {
+            <app-survey-card [survey]="survey"></app-survey-card>
+          }
+        </div>
+      </section>
+    </div>
+  </section>
+</main>

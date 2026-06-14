@@ -1,0 +1,24 @@
+<header class="app-header" aria-label="Poll app navigation">
+  <a class="brand" routerLink="" aria-label="Poll App home">
+    <span class="brand__mark" aria-hidden="true">
+      <svg viewBox="0 0 42 42" role="img">
+        <path d="M7 23.5C7 13.3 12.6 6 21.2 6C29.8 6 35 12.2 35 21C35 31 29.2 36 20.8 36C12.3 36 7 30.5 7 23.5Z" />
+        <path d="M15 22.8C15 18 17.2 14.8 21.1 14.8C25.1 14.8 27.2 18.1 27.2 22.8C27.2 27.6 24.8 30.2 21 30.2C17.2 30.2 15 27.6 15 22.8Z" />
+      </svg>
+    </span>
+    <span>Poll App</span>
+  </a>
+
+  <nav class="main-nav" aria-label="Main sections">
+    <ul>
+      <li><a routerLink="" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Active Survey</a></li>
+      <li><a routerLink="create" routerLinkActive="is-active">Create Survey</a></li>
+      <li><a routerLink="survey/3" routerLinkActive="is-active">Results</a></li>
+    </ul>
+  </nav>
+
+  <a class="button button--primary" routerLink="create">
+    <span class="button__icon" aria-hidden="true">+</span>
+    <span>New Survey</span>
+  </a>
+</header>

@@ -1,0 +1,70 @@
+<main class="poll-page">
+  <section class="workbench" id="create" aria-labelledby="create-title">
+    <div class="app-frame app-frame--form">
+      <header class="compact-header">
+        <a class="back-chip" routerLink="" aria-label="Back to survey overview">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" />
+          </svg>
+        </a>
+        <a class="button button--primary" routerLink="/survey/3">Create survey</a>
+      </header>
+
+      <div class="form-layout">
+        <section class="form-panel" aria-labelledby="create-title">
+          <p class="eyebrow">Draft</p>
+          <h2 id="create-title">Create new survey</h2>
+
+          <form class="survey-form">
+            <label>
+              <span>Question</span>
+              <input type="text" value="What would work best for your team?" />
+            </label>
+
+            <label>
+              <span>Description optional</span>
+              <textarea rows="4">Choose the setup that feels most useful for the next product cycle.</textarea>
+            </label>
+
+            <div class="date-row">
+              <label>
+                <span>Deadline</span>
+                <input type="text" value="18 Jun 2026" />
+              </label>
+              <label>
+                <span>Category</span>
+                <input type="text" value="Product" />
+              </label>
+            </div>
+          </form>
+        </section>
+
+        <aside class="options-panel" aria-labelledby="options-title">
+          <div class="section-heading">
+            <p class="eyebrow">Required</p>
+            <h2 id="options-title">Answer options</h2>
+          </div>
+
+          <div class="option-list">
+            @for (option of surveyService.draftOptions(); track option) {
+              <article class="option-item">
+                <span>{{ $index + 1 }}</span>
+                <p>{{ option }}</p>
+                <button type="button" aria-label="Remove option">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 7h12M10 11v6M14 11v6M9 7l1-2h4l1 2M8 7l1 12h6l1-12" />
+                  </svg>
+                </button>
+              </article>
+            }
+          </div>
+
+          <button class="button button--ghost" type="button">
+            <span class="button__icon" aria-hidden="true">+</span>
+            <span>Add option</span>
+          </button>
+        </aside>
+      </div>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,36 @@
+<main class="poll-page">
+  <section class="workbench" id="results" aria-labelledby="detail-title">
+    <div class="app-frame app-frame--detail">
+      <header class="compact-header">
+        <a class="back-chip" routerLink="" aria-label="Back to active surveys">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" />
+          </svg>
+        </a>
+        <span class="status-pill">{{ survey.deadline }}</span>
+      </header>
+
+      <div class="detail-layout">
+        <section class="vote-panel" aria-labelledby="detail-title">
+          <p class="eyebrow">Current survey</p>
+          <h2 id="detail-title">{{ survey.title }}</h2>
+          <p>
+            Select one answer. The current result stays visible while voting on
+            desktop and moves below the options on smaller screens.
+          </p>
+
+          <div class="vote-options">
+            @for (option of surveyService.resultOptions(); track option.label) {
+              <button class="vote-option" type="button">
+                <span>{{ option.label }}</span>
+                <span>{{ option.value }}%</span>
+              </button>
+            }
+          </div>
+        </section>
+
+        <app-survey-results [resultOptions]="surveyService.resultOptions()"></app-survey-results>
+      </div>
+    </div>
+  </section>
+</main>
