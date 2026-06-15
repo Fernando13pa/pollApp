@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { Surveys } from '../../services/surveys';
@@ -10,5 +10,14 @@ import { Surveys } from '../../services/surveys';
   styleUrl: './create-survey.scss',
 })
 export class CreateSurvey {
-  protected readonly surveyService = inject(Surveys);
+  public readonly surveyService = inject(Surveys);
+  public readonly isSecondQuestionVisible = signal(false);
+
+  public showNextQuestion(): void {
+    this.isSecondQuestionVisible.set(true);
+  }
+
+  public hideSecondQuestion(): void {
+    this.isSecondQuestionVisible.set(false);
+  }
 }

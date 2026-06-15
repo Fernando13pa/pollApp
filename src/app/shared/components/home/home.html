@@ -1,47 +1,54 @@
 <main class="poll-page">
-  <section class="hero-shell" aria-labelledby="home-title">
-    <div class="app-frame app-frame--home">
-      <section class="home-grid" id="active" aria-labelledby="home-title">
-        <div class="home-copy">
-          <p class="eyebrow">Active polling workspace</p>
-          <h1 id="home-title">Choose, vote, decide.</h1>
-          <p>
-            Keep urgent surveys visible, compare current polls, and open the next
-            decision without losing the overview.
-          </p>
-        </div>
+  <section class="home-hero" aria-labelledby="home-title">
+    <div class="home-hero__copy">
+      <h1 id="home-title">Collect Feedback, Unlock Ideas</h1>
+      <p>Create and share surveys in minutes - from team events to workplace culture. Collect opinions, engage your audience, and turn feedback into action.</p>
+      <a class="home-cta" routerLink="create">New survey</a>
+    </div>
 
-        <aside class="urgent-panel" aria-labelledby="urgent-title">
-          <div class="section-heading">
-            <p class="eyebrow">Soon ending</p>
-            <h2 id="urgent-title">Urgent surveys</h2>
-          </div>
+    <figure class="home-hero__phone" aria-label="Poll app survey preview">
+      <img class="home-hero__phone-img home-hero__phone-img--base" src="imgs/hero1.svg" alt="" />
+      <img class="home-hero__phone-img home-hero__phone-img--hover" src="imgs/hero 2.svg" alt="" />
+    </figure>
+  </section>
 
-          <div class="survey-stack survey-stack--compact">
-            @for (survey of surveyService.urgentSurveys(); track survey.id) {
-              <app-survey-card [survey]="survey" [compact]="true"></app-survey-card>
-            }
-          </div>
-        </aside>
-      </section>
+  <section class="home-surveys" aria-labelledby="survey-list-title">
+    <h2 id="survey-list-title">Your surveys</h2>
 
-      <section class="survey-board" aria-labelledby="survey-list-title">
-        <div class="section-heading">
-          <p class="eyebrow">Overview</p>
-          <h2 id="survey-list-title">All surveys</h2>
-        </div>
+    <div class="ending-surveys" aria-labelledby="ending-title">
+      <h3 id="ending-title">Ending soon surveys</h3>
 
-        <div class="tabs" aria-label="Survey filter">
-          <button class="tab tab--active" type="button">Current Survey</button>
-          <button class="tab" type="button">Past Survey</button>
-        </div>
+      <div class="ending-surveys__grid">
+        @for (survey of surveyService.urgentSurveys(); track survey.id) {
+          <a class="ending-card" [routerLink]="['/survey', survey.id]">
+            <span>{{ survey.tag }}</span>
+            <strong>{{ survey.title }}</strong>
+            <small>{{ survey.deadline }}</small>
+          </a>
+        }
+      </div>
+    </div>
 
-        <div class="survey-stack">
-          @for (survey of surveyService.surveys(); track survey.id) {
-            <app-survey-card [survey]="survey"></app-survey-card>
-          }
-        </div>
-      </section>
+    <div class="survey-toolbar" aria-label="Survey filters">
+      <div class="survey-tabs">
+        <button class="survey-tab survey-tab--active" type="button">Active survey</button>
+        <button class="survey-tab" type="button">Past survey</button>
+      </div>
+
+      <button class="sort-button" type="button">
+        <span>Sort by categories</span>
+        <img src="asset/arrow_drop_down_white.svg" alt="" />
+      </button>
+    </div>
+
+    <div class="survey-list">
+      @for (survey of surveyService.surveys(); track survey.id) {
+        <a class="survey-row" [routerLink]="['/survey', survey.id]">
+          <span>{{ survey.tag }}</span>
+          <strong>{{ survey.title }}</strong>
+          <small>{{ survey.deadline }}</small>
+        </a>
+      }
     </div>
   </section>
 </main>

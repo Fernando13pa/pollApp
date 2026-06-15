@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-import { SurveyCard } from '../survey-card/survey-card';
 import { Surveys } from '../../services/surveys';
 
 @Component({
   selector: 'app-home',
-  imports: [SurveyCard],
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

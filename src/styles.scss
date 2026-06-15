@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800;900&family=Nerko+One&family=Nokora:wght@400;700&display=swap");
+
 :root {
   --color-ink: #221227;
   --color-panel: #35273a;
@@ -15,7 +17,7 @@
   --radius-card: 0.5rem;
   --content-width: 120rem;
   --space-page: clamp(1rem, 4vw, 4.5rem);
-  --font-base: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-base: "Mulish", "Segoe UI", Arial, sans-serif;
 }
 
 *,
@@ -26,7 +28,7 @@
 
 html {
   min-width: 20rem;
-  background: var(--color-paper);
+  background: var(--color-panel);
   color: var(--color-ink);
   font-family: var(--font-base);
   font-size: 100%;
@@ -36,6 +38,7 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
+  background: var(--color-panel);
 }
 
 button,
@@ -108,13 +111,13 @@ svg {
 .app-header {
   position: relative;
   z-index: 2;
-  width: min(calc(100% - (var(--space-page) * 2)), var(--content-width));
-  margin: var(--space-page) auto calc(var(--space-page) * -0.35);
-  padding: clamp(1rem, 2vw, 2rem) clamp(1rem, 4vw, 4rem);
+  width: min(100% - 12.5rem, 1224px);
+  margin: 2.35rem auto -3.75rem;
+  padding: 0;
   color: var(--color-paper);
-  background: var(--color-panel);
-  border-radius: var(--radius-frame) 4rem var(--radius-frame) var(--radius-frame);
-  box-shadow: var(--shadow-panel);
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .brand,
@@ -149,15 +152,17 @@ svg {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  min-height: 3rem;
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
-  font-weight: 800;
+  width: 7.5rem;
+  min-height: 3.1rem;
 }
 
 .brand:hover {
-  color: var(--color-accent);
   transform: translateY(-0.08rem);
+}
+
+.brand img {
+  width: 100%;
+  height: auto;
 }
 
 .brand__mark {
@@ -642,8 +647,8 @@ p {
 
 @media (max-width: 70rem) {
   .app-header {
-    align-items: flex-start;
-    flex-wrap: wrap;
+    width: min(100% - 2rem, 48rem);
+    margin-block-start: 1.5rem;
   }
 
   .main-nav {
@@ -678,10 +683,8 @@ p {
   }
 
   .app-header {
-    width: 100%;
-    margin: 0;
-    padding: 1rem;
-    border-radius: 0;
+    width: min(100% - 1.25rem, 28rem);
+    margin: 1rem auto -1rem;
   }
 
   .app-frame {
@@ -693,12 +696,6 @@ p {
   .app-frame--detail {
     min-height: auto;
     padding: 1rem;
-  }
-
-  .app-header {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: stretch;
   }
 
   .compact-header {
