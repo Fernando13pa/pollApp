@@ -199,24 +199,24 @@ textarea:focus {
   height: 1.35rem;
 }
 
-.category-button {
-  display: inline-flex;
+.survey-field--tag {
   grid-column: 4 / 7;
-  width: fit-content;
-  min-height: 2.3rem;
-  align-items: center;
-  gap: 1.7rem;
   align-self: end;
-  margin-inline-start: 0.3rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
 }
 
-.category-button img {
-  width: 1.4rem;
-  height: 1.4rem;
+select {
+  width: 100%;
+  min-height: 2.3rem;
+  color: #35273a;
+  background: #fbfafb;
+  border: 0;
+  border-radius: 0.35rem 1rem 0.35rem 0.35rem;
+  font-family: "Mulish", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  appearance: auto;
 }
 
 .question-grid {
@@ -352,6 +352,45 @@ textarea:focus {
   transform: translateY(-0.08rem);
 }
 
+.publish-toast {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  color: #35273a;
+  background: #ffcfa1;
+  border-radius: 0.55rem;
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 25%);
+  font-family: "Mulish", "Segoe UI", sans-serif;
+  font-weight: 700;
+}
+
+.publish-toast p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.publish-toast__close {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.publish-toast__close img {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
 @media (max-width: 62rem) {
   .survey-overlay {
     border-radius: 0 4rem 0.25rem 0.25rem;
@@ -365,7 +404,7 @@ textarea:focus {
   .survey-field--name,
   .survey-field--description,
   .survey-field--date,
-  .category-button {
+  .survey-field--tag {
     grid-column: auto;
   }
 

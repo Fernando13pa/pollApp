@@ -1,4 +1,4 @@
-@if (router.url !== '/create') {
+@if (router.url !== '/create' && !router.url.startsWith('/survey/')) {
   <app-header></app-header>
 }
 <router-outlet />

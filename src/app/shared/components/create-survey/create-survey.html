@@ -12,13 +12,22 @@
       </a>
     </header>
 
-    <form class="survey-form">
+    <form class="survey-form" (submit)="$event.preventDefault(); publish()">
       <section class="survey-form__top" aria-label="Survey information">
         <div class="survey-field survey-field--name">
-          <label for="survey-name">Survey name</label>
+          <label for="survey-name">
+            Survey name <em class="required-mark" aria-label="required">*</em>
+          </label>
           <div class="field-action">
-            <input id="survey-name" type="text" />
-            <button type="button" aria-label="Clear survey name">
+            <input
+              id="survey-name"
+              type="text"
+              [value]="surveyTitle()"
+              (input)="surveyTitle.set($any($event.target).value)"
+              placeholder="Enter survey title..."
+              required
+            />
+            <button type="button" aria-label="Clear survey name" (click)="surveyTitle.set('')">
               <img src="asset/delete.svg" alt="" />
             </button>
           </div>
@@ -27,8 +36,14 @@
         <div class="survey-field survey-field--description">
           <label for="survey-description">Describing text <span>(optional)</span></label>
           <div class="field-action">
-            <textarea id="survey-description" rows="5"></textarea>
-            <button type="button" aria-label="Clear description">
+            <textarea
+              id="survey-description"
+              rows="5"
+              [value]="surveyDescription()"
+              (input)="surveyDescription.set($any($event.target).value)"
+              placeholder="Describe what this survey is about..."
+            ></textarea>
+            <button type="button" aria-label="Clear description" (click)="surveyDescription.set('')">
               <img src="asset/delete.svg" alt="" />
             </button>
           </div>
@@ -37,109 +52,123 @@
         <div class="survey-field survey-field--date">
           <label for="survey-date">Set end date <span>(optional)</span></label>
           <div class="field-action">
-            <input id="survey-date" type="text" />
-            <button type="button" aria-label="Clear end date">
+            <input
+              id="survey-date"
+              type="date"
+              [value]="surveyEndDate()"
+              (input)="surveyEndDate.set($any($event.target).value)"
+            />
+            <button type="button" aria-label="Clear end date" (click)="surveyEndDate.set('')">
               <img src="asset/delete.svg" alt="" />
             </button>
           </div>
         </div>
 
-        <button class="category-button" type="button">
-          <span>Choose category</span>
-          <img src="asset/arrow_drop_down_white.svg" alt="" />
-        </button>
+        <div class="survey-field survey-field--tag">
+          <label for="survey-tag">Choose category <span>(optional)</span></label>
+          <div class="field-action">
+            <select
+              id="survey-tag"
+              [value]="surveyTag()"
+              (change)="surveyTag.set($any($event.target).value)"
+            >
+              @for (cat of CATEGORIES; track cat) {
+                <option [value]="cat">{{ cat }}</option>
+              }
+            </select>
+          </div>
+        </div>
       </section>
 
       <section class="question-grid" aria-label="Survey questions">
-        <article class="question-card">
-          <div class="question-title">
-            <label for="question-1">1. Question</label>
-            <button type="button" aria-label="Clear question 1">
-              <img src="asset/delete.svg" alt="" />
-            </button>
-          </div>
-
-          <input id="question-1" type="text" value="Which date would work best for you?" />
-
-          <div class="answer-header">
-            <strong>Answers</strong>
-            <label class="multi-check">
-              <input type="checkbox" />
-              <span>Allow multiple answers.</span>
-            </label>
-          </div>
-
-          <div class="answer-row">
-            <label for="answer-a-1">A.</label>
-            <input id="answer-a-1" type="text" />
-            <button type="button" aria-label="Delete answer A">
-              <img src="asset/delete.svg" alt="" />
-            </button>
-          </div>
-
-          <div class="answer-row">
-            <label for="answer-b-1">B.</label>
-            <input id="answer-b-1" type="text" />
-            <button type="button" aria-label="Delete answer B">
-              <img src="asset/delete.svg" alt="" />
-            </button>
-          </div>
-
-          <button class="link-action" type="button">
-            <span>Add answer</span>
-            <img src="asset/add_circle_white.svg" alt="" />
-          </button>
-        </article>
-
-        @if (isSecondQuestionVisible()) {
+        @for (question of questions(); track $index; let qi = $index) {
           <article class="question-card">
             <div class="question-title">
-              <label for="question-2">2. Question</label>
-              <button type="button" aria-label="Delete question 2" (click)="hideSecondQuestion()">
-                <img src="asset/delete.svg" alt="" />
-              </button>
+              <label [for]="'question-' + qi">
+                {{ qi + 1 }}. Question
+                <em class="required-mark" aria-label="required">*</em>
+              </label>
+              @if (questions().length > 1) {
+                <button
+                  type="button"
+                  [attr.aria-label]="'Delete question ' + (qi + 1)"
+                  (click)="removeQuestion(qi)"
+                >
+                  <img src="asset/delete.svg" alt="" />
+                </button>
+              }
             </div>
 
-            <input id="question-2" type="text" value="Choose the activities you prefer?" />
+            <input
+              [id]="'question-' + qi"
+              type="text"
+              [value]="question.title"
+              (input)="setQuestionTitle(qi, $any($event.target).value)"
+              placeholder="Enter your question..."
+            />
 
             <div class="answer-header">
-              <strong>Answers</strong>
+              <strong>
+                Answers
+                <em class="required-mark" aria-label="minimum 2 required">(min. 2)*</em>
+              </strong>
               <label class="multi-check">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  [checked]="question.multiple"
+                  (change)="setQuestionMultiple(qi, $any($event.target).checked)"
+                />
                 <span>Allow multiple answers.</span>
               </label>
             </div>
 
-            <div class="answer-row">
-              <label for="answer-a-2">A.</label>
-              <input id="answer-a-2" type="text" />
-              <button type="button" aria-label="Delete answer A from question 2">
-                <img src="asset/delete.svg" alt="" />
-              </button>
-            </div>
+            @for (answer of question.answers; track $index; let ai = $index) {
+              <div class="answer-row">
+                <label [for]="'answer-' + qi + '-' + ai">{{ getLetter(ai) }}.</label>
+                <input
+                  [id]="'answer-' + qi + '-' + ai"
+                  type="text"
+                  [value]="answer.text"
+                  (input)="setAnswerText(qi, ai, $any($event.target).value)"
+                  placeholder="Enter answer option..."
+                />
+                @if (question.answers.length > 2) {
+                  <button
+                    type="button"
+                    [attr.aria-label]="'Delete answer ' + getLetter(ai)"
+                    (click)="removeAnswer(qi, ai)"
+                  >
+                    <img src="asset/delete.svg" alt="" />
+                  </button>
+                }
+              </div>
+            }
 
-            <div class="answer-row">
-              <label for="answer-b-2">B.</label>
-              <input id="answer-b-2" type="text" />
-              <button type="button" aria-label="Delete answer B from question 2">
-                <img src="asset/delete.svg" alt="" />
-              </button>
-            </div>
-
-            <button class="link-action" type="button">
+            <button class="link-action" type="button" (click)="addAnswer(qi)">
               <span>Add answer</span>
               <img src="asset/add_circle_white.svg" alt="" />
             </button>
           </article>
         }
 
-        <button class="add-question-button" type="button" (click)="showNextQuestion()" [disabled]="isSecondQuestionVisible()">
+        <button class="add-question-button" type="button" (click)="addQuestion()">
           <span>Add next question</span>
           <img src="asset/add_circle_white.svg" alt="" />
         </button>
       </section>
-    </form>
 
-    <a class="publish-button" routerLink="/survey/3">Publish</a>
+      <button class="publish-button" type="submit" [disabled]="!isValid()">
+        Publish
+      </button>
+    </form>
   </section>
+
+  @if (showConfirm()) {
+    <div class="publish-toast" role="status" aria-live="polite">
+      <p>Your survey is now published</p>
+      <button class="publish-toast__close" type="button" aria-label="Close notification" (click)="confirmPublish()">
+        <img src="asset/close.svg" alt="" />
+      </button>
+    </div>
+  }
 </main>

@@ -16,10 +16,10 @@
     <h2 id="survey-list-title">Your surveys</h2>
 
     <div class="ending-surveys" aria-labelledby="ending-title">
-      <h3 id="ending-title">Ending soon surveys</h3>
+      <h3 id="ending-title">Ending soon</h3>
 
       <div class="ending-surveys__grid">
-        @for (survey of surveyService.urgentSurveys(); track survey.id) {
+        @for (survey of surveyService.sortedUrgentSurveys(); track survey.id) {
           <a class="ending-card" [routerLink]="['/survey', survey.id]">
             <span>{{ survey.tag }}</span>
             <strong>{{ survey.title }}</strong>
@@ -30,24 +30,49 @@
     </div>
 
     <div class="survey-toolbar" aria-label="Survey filters">
-      <div class="survey-tabs">
-        <button class="survey-tab survey-tab--active" type="button">Active survey</button>
-        <button class="survey-tab" type="button">Past survey</button>
+      <div class="survey-tabs" role="tablist">
+        <button
+          class="survey-tab"
+          [class.survey-tab--active]="activeTab() === 'active'"
+          type="button"
+          role="tab"
+          [attr.aria-selected]="activeTab() === 'active'"
+          (click)="setTab('active')"
+        >
+          Active survey
+        </button>
+        <button
+          class="survey-tab"
+          [class.survey-tab--active]="activeTab() === 'past'"
+          type="button"
+          role="tab"
+          [attr.aria-selected]="activeTab() === 'past'"
+          (click)="setTab('past')"
+        >
+          Past survey
+        </button>
       </div>
-
-      <button class="sort-button" type="button">
-        <span>Sort by categories</span>
-        <img src="asset/arrow_drop_down_white.svg" alt="" />
-      </button>
     </div>
 
-    <div class="survey-list">
-      @for (survey of surveyService.surveys(); track survey.id) {
-        <a class="survey-row" [routerLink]="['/survey', survey.id]">
-          <span>{{ survey.tag }}</span>
-          <strong>{{ survey.title }}</strong>
-          <small>{{ survey.deadline }}</small>
-        </a>
+    <div class="survey-list" role="tabpanel">
+      @if (activeTab() === 'active') {
+        @for (survey of surveyService.surveys(); track survey.id) {
+          <a class="survey-row" [routerLink]="['/survey', survey.id]">
+            <span>{{ survey.tag }}</span>
+            <strong>{{ survey.title }}</strong>
+            <p>{{ survey.description }}</p>
+            <small>{{ survey.deadline }}</small>
+          </a>
+        }
+      } @else {
+        @for (survey of surveyService.pastSurveys(); track survey.id) {
+          <div class="survey-row survey-row--past" aria-label="{{ survey.title }}, ended">
+            <span>{{ survey.tag }}</span>
+            <strong>{{ survey.title }}</strong>
+            <p>{{ survey.description }}</p>
+            <small>{{ survey.endDate }}</small>
+          </div>
+        }
       }
     </div>
   </section>

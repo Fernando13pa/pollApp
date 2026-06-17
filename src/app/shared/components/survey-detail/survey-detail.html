@@ -1,36 +1,106 @@
-<main class="poll-page">
-  <section class="workbench" id="results" aria-labelledby="detail-title">
-    <div class="app-frame app-frame--detail">
-      <header class="compact-header">
-        <a class="back-chip" routerLink="" aria-label="Back to active surveys">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M15 5l-7 7 7 7" />
-          </svg>
-        </a>
-        <span class="status-pill">{{ survey.deadline }}</span>
-      </header>
+<main class="single-survey-page">
+  <header class="single-survey-header">
+    <nav class="site-nav" aria-label="Site navigation">
+      <ul class="site-nav__list">
+        <li>
+          <a class="brand" routerLink="" aria-label="Poll App home">
+            <img src="imgs/poll_app_orange_hero.svg" alt="Poll App" />
+          </a>
+        </li>
+        <li>
+          <a class="create-button" routerLink="/create">Create survey</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
-      <div class="detail-layout">
-        <section class="vote-panel" aria-labelledby="detail-title">
-          <p class="eyebrow">Current survey</p>
-          <h2 id="detail-title">{{ survey.title }}</h2>
-          <p>
-            Select one answer. The current result stays visible while voting on
-            desktop and moves below the options on smaller screens.
-          </p>
+  <div class="single-survey-layout">
+    <section class="survey-overlay" aria-labelledby="survey-title">
+      <a class="close-button" routerLink="" aria-label="Close survey">
+        <span aria-hidden="true"></span>
+      </a>
 
-          <div class="vote-options">
-            @for (option of surveyService.resultOptions(); track option.label) {
-              <button class="vote-option" type="button">
-                <span>{{ option.label }}</span>
-                <span>{{ option.value }}%</span>
-              </button>
-            }
-          </div>
-        </section>
-
-        <app-survey-results [resultOptions]="surveyService.resultOptions()"></app-survey-results>
+      <div class="survey-meta">
+        <span class="status-badge">{{ survey().status === 'active' ? 'Published' : 'Ended' }}</span>
+        <span>{{ survey().endDate }}</span>
+        <span>Category: {{ survey().tag }}</span>
       </div>
-    </div>
-  </section>
+
+      <h1 id="survey-title">{{ survey().title }}</h1>
+      <p class="survey-description">{{ survey().description }}</p>
+
+      @if (hasVoted()) {
+        <p class="vote-submitted-msg" role="status">
+          Your vote has been submitted. Thank you for participating!
+        </p>
+      }
+
+      <form class="question-grid" (submit)="$event.preventDefault()">
+        @for (question of survey().questions; track question.id) {
+          <fieldset class="question-card" [disabled]="hasVoted()">
+            <legend>{{ question.id }}. {{ question.title }}</legend>
+
+            @if (question.multiple) {
+              <p>More than one answer is possible.</p>
+            }
+
+            <div class="answer-list">
+              @for (option of question.options; track option.label) {
+                <label
+                  class="answer-option"
+                  [class.answer-option--selected]="isSelected(question.id, option.label)"
+                >
+                  @if (question.multiple) {
+                    <input
+                      type="checkbox"
+                      [name]="'question-' + question.id"
+                      [checked]="isSelected(question.id, option.label)"
+                      [disabled]="hasVoted()"
+                      (change)="toggleOption(question.id, option.label, true)"
+                    />
+                  } @else {
+                    <input
+                      type="radio"
+                      [name]="'question-' + question.id"
+                      [checked]="isSelected(question.id, option.label)"
+                      [disabled]="hasVoted()"
+                      (change)="toggleOption(question.id, option.label, false)"
+                    />
+                  }
+                  <span>{{ option.label }}.</span>
+                  <strong>{{ option.text }}</strong>
+                </label>
+              }
+            </div>
+          </fieldset>
+        }
+      </form>
+
+      <button
+        class="complete-button"
+        type="button"
+        [disabled]="hasVoted()"
+        (click)="submitVote()"
+      >
+        <span>{{ hasVoted() ? 'Vote submitted!' : 'Complete survey' }}</span>
+        <span aria-hidden="true"></span>
+      </button>
+    </section>
+
+    <section class="results-wrap" aria-label="Survey results">
+      <button
+        class="results-toggle"
+        type="button"
+        [attr.aria-expanded]="showResults()"
+        (click)="toggleResults()"
+      >
+        <span>{{ showResults() ? 'Close results' : 'Show results' }}</span>
+        <span aria-hidden="true"></span>
+      </button>
+
+      @if (showResults()) {
+        <app-survey-results [questions]="survey().questions"></app-survey-results>
+      }
+    </section>
+  </div>
 </main>
