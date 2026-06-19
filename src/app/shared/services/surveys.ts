@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 
-import { NewQuestion, NewSurveyData, ResultOption, Survey, SurveyQuestion } from '../interfaces/survey';
+import { NewQuestion, NewSurveyData, Survey, SurveyQuestion } from '../interfaces/survey';
 
 function parseEndDate(endDate: string): number {
   const match = endDate.match(/(\d{2})\.(\d{2})\.(\d{4})/);
@@ -8,7 +8,7 @@ function parseEndDate(endDate: string): number {
   return new Date(`${match[3]}-${match[2]}-${match[1]}`).getTime();
 }
 
-const teamEventQuestions: SurveyQuestion[] = [
+const TEAM_EVENT_QUESTIONS: SurveyQuestion[] = [
   {
     id: 1,
     title: 'Which date would work best for you?',
@@ -55,7 +55,7 @@ const teamEventQuestions: SurveyQuestion[] = [
   },
 ];
 
-const wellnessQuestions: SurveyQuestion[] = [
+const WELLNESS_QUESTIONS: SurveyQuestion[] = [
   {
     id: 1,
     title: 'Which wellness activity should we try first?',
@@ -78,7 +78,7 @@ const wellnessQuestions: SurveyQuestion[] = [
   },
 ];
 
-const gamingQuestions: SurveyQuestion[] = [
+const GAMING_QUESTIONS: SurveyQuestion[] = [
   {
     id: 1,
     title: 'Which game night format sounds best?',
@@ -116,7 +116,7 @@ export class Surveys {
       isUrgent: true,
       progress: 82,
       status: 'active' as const,
-      questions: teamEventQuestions,
+      questions: TEAM_EVENT_QUESTIONS,
     },
     {
       id: 2,
@@ -128,7 +128,7 @@ export class Surveys {
       isUrgent: true,
       progress: 68,
       status: 'active' as const,
-      questions: wellnessQuestions,
+      questions: WELLNESS_QUESTIONS,
     },
     {
       id: 6,
@@ -140,7 +140,7 @@ export class Surveys {
       isUrgent: true,
       progress: 74,
       status: 'active' as const,
-      questions: gamingQuestions,
+      questions: GAMING_QUESTIONS,
     },
   ]);
 
@@ -155,7 +155,7 @@ export class Surveys {
       isUrgent: false,
       progress: 54,
       status: 'active',
-      questions: teamEventQuestions,
+      questions: TEAM_EVENT_QUESTIONS,
     },
     {
       id: 4,
@@ -167,7 +167,7 @@ export class Surveys {
       isUrgent: false,
       progress: 39,
       status: 'active',
-      questions: gamingQuestions,
+      questions: GAMING_QUESTIONS,
     },
     {
       id: 5,
@@ -179,7 +179,7 @@ export class Surveys {
       isUrgent: false,
       progress: 72,
       status: 'active',
-      questions: wellnessQuestions,
+      questions: WELLNESS_QUESTIONS,
     },
     {
       id: 7,
@@ -191,7 +191,7 @@ export class Surveys {
       isUrgent: false,
       progress: 64,
       status: 'active',
-      questions: wellnessQuestions,
+      questions: WELLNESS_QUESTIONS,
     },
     {
       id: 8,
@@ -203,7 +203,7 @@ export class Surveys {
       isUrgent: false,
       progress: 47,
       status: 'active',
-      questions: teamEventQuestions,
+      questions: TEAM_EVENT_QUESTIONS,
     },
     {
       id: 9,
@@ -215,7 +215,7 @@ export class Surveys {
       isUrgent: false,
       progress: 79,
       status: 'active',
-      questions: teamEventQuestions,
+      questions: TEAM_EVENT_QUESTIONS,
     },
   ]);
 
@@ -230,7 +230,7 @@ export class Surveys {
       isUrgent: false,
       progress: 100,
       status: 'past',
-      questions: teamEventQuestions,
+      questions: TEAM_EVENT_QUESTIONS,
     },
     {
       id: 11,
@@ -242,7 +242,7 @@ export class Surveys {
       isUrgent: false,
       progress: 100,
       status: 'past',
-      questions: wellnessQuestions,
+      questions: WELLNESS_QUESTIONS,
     },
     {
       id: 12,
@@ -254,7 +254,7 @@ export class Surveys {
       isUrgent: false,
       progress: 100,
       status: 'past',
-      questions: gamingQuestions,
+      questions: GAMING_QUESTIONS,
     },
   ]);
 

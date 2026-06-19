@@ -3,7 +3,10 @@
     <div class="home-hero__copy">
       <h1 id="home-title">Collect Feedback, Unlock Ideas</h1>
       <p>Create and share surveys in minutes - from team events to workplace culture. Collect opinions, engage your audience, and turn feedback into action.</p>
-      <a class="home-cta" routerLink="create">New survey</a>
+      <a class="home-cta" routerLink="create">
+        <span>New survey</span>
+        <img src="asset/add_circle.svg" alt="" />
+      </a>
     </div>
 
     <figure class="home-hero__phone" aria-label="Poll app survey preview">
@@ -16,7 +19,7 @@
     <h2 id="survey-list-title">Your surveys</h2>
 
     <div class="ending-surveys" aria-labelledby="ending-title">
-      <h3 id="ending-title">Ending soon</h3>
+      <h3 id="ending-title">Ending soon surveys</h3>
 
       <div class="ending-surveys__grid">
         @for (survey of surveyService.sortedUrgentSurveys(); track survey.id) {
@@ -52,6 +55,11 @@
           Past survey
         </button>
       </div>
+
+      <button class="sort-button" type="button" aria-label="Sort surveys by categories">
+        <span>Sort by categories</span>
+        <img src="asset/arrow_drop_down_white.svg" alt="" />
+      </button>
     </div>
 
     <div class="survey-list" role="tabpanel">
@@ -66,7 +74,7 @@
         }
       } @else {
         @for (survey of surveyService.pastSurveys(); track survey.id) {
-          <div class="survey-row survey-row--past" aria-label="{{ survey.title }}, ended">
+          <div class="survey-row survey-row--past" [attr.aria-label]="survey.title + ', ended'">
             <span>{{ survey.tag }}</span>
             <strong>{{ survey.title }}</strong>
             <p>{{ survey.description }}</p>

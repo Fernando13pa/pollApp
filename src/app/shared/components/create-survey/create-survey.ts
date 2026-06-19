@@ -23,29 +23,29 @@ export class CreateSurvey {
   private readonly surveyService = inject(Surveys);
   private readonly router = inject(Router);
 
-  protected readonly surveyTitle = signal('');
-  protected readonly surveyDescription = signal('');
-  protected readonly surveyEndDate = signal('');
-  protected readonly surveyTag = signal('General');
-  protected readonly showConfirm = signal(false);
+  readonly surveyTitle = signal('');
+  readonly surveyDescription = signal('');
+  readonly surveyEndDate = signal('');
+  readonly surveyTag = signal('');
+  readonly isCategoryMenuOpen = signal(false);
+  readonly showConfirm = signal(false);
   private newSurveyId: number = 0;
 
-  protected readonly CATEGORIES = [
-    'General',
-    'Team activities',
-    'Workplace',
-    'HR',
-    'IT',
-    'Onboarding',
-    'Feedback',
+  readonly CATEGORIES = [
+    'Team Activities',
+    'Health & Wellness',
+    'Gaming & Entertainment',
+    'Education & Learning',
+    'Lifestyle & Preferences',
+    'Technology & Innovation',
   ] as const;
 
-  protected readonly questions = signal<DraftQuestion[]>([
+  readonly questions = signal<DraftQuestion[]>([
     { title: '', multiple: false, answers: [{ text: '' }, { text: '' }] },
   ]);
 
   /** True when the title is filled and every question has a title plus at least two answers. */
-  protected readonly isValid = computed(() => {
+  readonly isValid = computed(() => {
     const titleOk = this.surveyTitle().trim() !== '';
     const questionsOk = this.questions().every(
       (q) =>
@@ -55,12 +55,38 @@ export class CreateSurvey {
     return titleOk && this.questions().length > 0 && questionsOk;
   });
 
-  protected getLetter(index: number): string {
+  readonly isSingleQuestion = computed(() => this.questions().length === 1);
+  readonly hasExpandedSingleQuestion = computed(() => {
+    const firstQuestion = this.questions()[0];
+    return this.isSingleQuestion() && firstQuestion.answers.length > 2;
+  });
+  readonly hasExpandedForm = computed(
+    () => this.questions().length > 1 || this.hasExpandedSingleQuestion(),
+  );
+
+  protected inputValue(event: Event): string {
+    return (event.target as HTMLInputElement).value;
+  }
+
+  protected checkboxChecked(event: Event): boolean {
+    return (event.target as HTMLInputElement).checked;
+  }
+
+  getLetter(index: number): string {
     return String.fromCharCode(65 + index);
   }
 
+  toggleCategoryMenu(): void {
+    this.isCategoryMenuOpen.update((isOpen) => !isOpen);
+  }
+
+  selectCategory(category: string): void {
+    this.surveyTag.set(category);
+    this.isCategoryMenuOpen.set(false);
+  }
+
   /** Appends a new blank question with two empty answer slots to the draft. */
-  protected addQuestion(): void {
+  addQuestion(): void {
     this.questions.update((qs) => [
       ...qs,
       { title: '', multiple: false, answers: [{ text: '' }, { text: '' }] },
@@ -68,7 +94,7 @@ export class CreateSurvey {
   }
 
   /** Resets question 0 to blank; removes any other question by index. */
-  protected removeQuestion(index: number): void {
+  removeQuestion(index: number): void {
     if (index === 0) {
       this.questions.update((qs) =>
         qs.map((q, i) =>
@@ -82,19 +108,19 @@ export class CreateSurvey {
     }
   }
 
-  protected setQuestionTitle(index: number, value: string): void {
+  setQuestionTitle(index: number, value: string): void {
     this.questions.update((qs) =>
       qs.map((q, i) => (i === index ? { ...q, title: value } : q)),
     );
   }
 
-  protected setQuestionMultiple(index: number, checked: boolean): void {
+  setQuestionMultiple(index: number, checked: boolean): void {
     this.questions.update((qs) =>
       qs.map((q, i) => (i === index ? { ...q, multiple: checked } : q)),
     );
   }
 
-  protected addAnswer(questionIndex: number): void {
+  addAnswer(questionIndex: number): void {
     this.questions.update((qs) =>
       qs.map((q, i) =>
         i === questionIndex ? { ...q, answers: [...q.answers, { text: '' }] } : q,
@@ -102,7 +128,7 @@ export class CreateSurvey {
     );
   }
 
-  protected removeAnswer(questionIndex: number, answerIndex: number): void {
+  removeAnswer(questionIndex: number, answerIndex: number): void {
     this.questions.update((qs) =>
       qs.map((q, i) =>
         i === questionIndex
@@ -112,7 +138,7 @@ export class CreateSurvey {
     );
   }
 
-  protected setAnswerText(questionIndex: number, answerIndex: number, value: string): void {
+  setAnswerText(questionIndex: number, answerIndex: number, value: string): void {
     this.questions.update((qs) =>
       qs.map((q, i) =>
         i === questionIndex
@@ -128,13 +154,13 @@ export class CreateSurvey {
   }
 
   /** Validates the form, persists the survey via the service, then shows the confirmation toast. */
-  protected publish(): void {
+  publish(): void {
     if (!this.isValid()) return;
     this.newSurveyId = this.surveyService.createSurvey({
       title: this.surveyTitle(),
       description: this.surveyDescription(),
       endDate: this.surveyEndDate(),
-      tag: this.surveyTag(),
+      tag: this.surveyTag() || 'Team Activities',
       questions: this.questions().map((q) => ({
         title: q.title,
         multiple: q.multiple,
@@ -145,7 +171,7 @@ export class CreateSurvey {
   }
 
   /** Closes the confirmation toast and navigates to the newly created survey page. */
-  protected confirmPublish(): void {
+  confirmPublish(): void {
     this.showConfirm.set(false);
     this.router.navigate(['/survey', this.newSurveyId]);
   }

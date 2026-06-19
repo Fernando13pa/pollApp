@@ -23,6 +23,39 @@
   max-width: 44rem;
 }
 
+.home-hero__copy h1,
+.home-hero__copy p,
+.home-surveys > h2,
+.ending-surveys,
+.survey-toolbar,
+.survey-list {
+  animation: home-rise-in 680ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.home-hero__copy h1 {
+  animation-delay: 80ms;
+}
+
+.home-hero__copy p {
+  animation-delay: 180ms;
+}
+
+.home-surveys > h2 {
+  animation-delay: 420ms;
+}
+
+.ending-surveys {
+  animation-delay: 520ms;
+}
+
+.survey-toolbar {
+  animation-delay: 620ms;
+}
+
+.survey-list {
+  animation-delay: 700ms;
+}
+
 .home-hero h1,
 .home-surveys h2 {
   margin: 0;
@@ -51,9 +84,10 @@
 
 .home-cta {
   display: inline-flex;
-  min-height: 3rem;
+  min-height: 3.05rem;
   align-items: center;
   justify-content: center;
+  gap: 0;
   margin-block-start: 2.5rem;
   padding: 0.7rem 1.25rem;
   color: #16111a;
@@ -62,16 +96,54 @@
   font-family: "Mulish", "Segoe UI", sans-serif;
   font-size: 1.12rem;
   font-weight: 900;
+  overflow: hidden;
   transition:
-    transform 180ms ease,
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
     background-color 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 220ms ease,
+    padding 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    gap 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.home-cta span {
+  line-height: 1;
+}
+
+.home-cta img {
+  width: 1.32rem;
+  height: 1.32rem;
+  flex: 0 0 auto;
+  margin-inline-start: -1.32rem;
+  opacity: 0;
+  transition:
+    margin 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 160ms ease,
+    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 220ms ease;
+  transform: translateX(-0.25rem) scale(0.72);
 }
 
 .home-cta:hover {
   background: #ffb770;
   box-shadow: 0 0.75rem 1.5rem rgb(0 0 0 / 18%);
-  transform: translateY(-0.12rem);
+  transform: translateY(-0.14rem) scale(1.025);
+  gap: 0.72rem;
+  padding-inline-end: 1.05rem;
+}
+
+.home-cta:hover img {
+  margin-inline-start: 0;
+  opacity: 1;
+  transform: translateX(0) rotate(90deg) scale(1);
+}
+
+.home-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.home-cta:focus-visible {
+  outline: 0.18rem solid #ffffff;
+  outline-offset: 0.22rem;
 }
 
 .home-hero__phone {
@@ -80,6 +152,8 @@
   aspect-ratio: 1;
   margin: 0;
   justify-self: end;
+  animation: phone-float-in 760ms cubic-bezier(0.18, 0.9, 0.22, 1) 240ms both;
+  will-change: transform, opacity;
 }
 
 .home-hero__phone-img {
@@ -113,6 +187,35 @@
   opacity: 1;
   transform: translateY(-0.35rem) rotate(-1deg) scale(1.02);
   filter: drop-shadow(0 1.5rem 1.5rem rgb(0 0 0 / 22%));
+}
+
+@keyframes phone-float-in {
+  from {
+    opacity: 0;
+    transform: translateY(2.4rem) scale(0.96);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(-0.25rem) scale(1.01);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes home-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.15rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .home-surveys {
@@ -258,7 +361,29 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  max-height: 25.4rem;
   margin-block-start: 2.1rem;
+  overflow-y: auto;
+  padding-inline-end: 1.25rem;
+  scrollbar-color: #ffb770 transparent;
+  scrollbar-width: thin;
+}
+
+.survey-list::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.survey-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.survey-list::-webkit-scrollbar-thumb {
+  background: #ffb770;
+  border-radius: 999rem;
+}
+
+.survey-list::-webkit-scrollbar-button {
+  display: none;
 }
 
 .survey-row {
@@ -340,37 +465,169 @@
 
 @media (max-width: 42rem) {
   .poll-page {
-    width: min(100% - 1.25rem, 28rem);
-    padding-block: 2rem 4rem;
+    width: auto;
+    margin-inline: 0.875rem;
+    overflow-x: hidden;
+    padding-block: 2.2rem 4rem;
+  }
+
+  .home-hero {
+    gap: 0;
+  }
+
+  .home-hero__phone,
+  .home-hero__copy h1,
+  .home-hero__copy p,
+  .home-surveys > h2,
+  .ending-surveys,
+  .survey-toolbar,
+  .survey-list {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .home-hero__copy {
+    display: contents;
   }
 
   .home-hero h1 {
-    font-size: clamp(3.7rem, 18vw, 5rem);
+    order: 1;
+    max-width: 12ch;
+    margin-block-start: 2.5rem;
+    font-size: clamp(3.15rem, 15vw, 4rem);
   }
 
   .home-hero p {
-    font-size: 1.12rem;
+    order: 3;
+    max-width: 100%;
+    margin-block-start: 1.8rem;
+    font-size: 1.09rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .home-cta {
+    order: 4;
+    justify-self: center;
+    min-height: 3.45rem;
+    margin-block-start: 2.75rem;
+    padding-inline: 1.15rem;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .home-cta::after {
+    display: none;
+    width: 1rem;
+    height: 1rem;
+    margin-inline-start: 0.6rem;
+    content: "";
+    background: url("/asset/add_circle.svg") center / contain no-repeat;
+  }
+
+  .home-hero__phone {
+    order: 2;
+    justify-self: center;
+    width: min(100%, 17rem);
+    margin-block-start: 1.8rem;
   }
 
   .home-surveys {
-    margin-block-start: 3.5rem;
+    margin-block-start: 5rem;
+  }
+
+  .home-surveys h2 {
+    font-size: clamp(3.2rem, 16vw, 4.1rem);
+    text-align: left;
   }
 
   .ending-surveys {
-    margin-block-start: 2.5rem;
+    margin-block-start: 2rem;
+  }
+
+  .ending-surveys h3 {
+    margin-block-end: 1.3rem;
+    font-size: 1.48rem;
+  }
+
+  .ending-surveys__grid {
+    display: flex;
+    gap: 1rem;
+    width: 100vw;
+    margin-inline: calc((100vw - 100%) / -2);
+    overflow-x: auto;
+    padding-inline: calc((100vw - 100%) / 2);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .ending-surveys__grid::-webkit-scrollbar {
+    display: none;
   }
 
   .ending-card {
-    min-height: 15rem;
-    padding: 2rem;
+    min-width: 15.4rem;
+    min-height: 15.8rem;
+    padding: 1.35rem 1.35rem 1.45rem;
+    scroll-snap-align: start;
+  }
+
+  .ending-card strong {
+    font-size: 1.45rem;
   }
 
   .survey-toolbar {
     align-items: flex-start;
     flex-direction: column;
+    gap: 2.25rem;
+    margin-block-start: 2.45rem;
+  }
+
+  .survey-tabs {
+    gap: 1rem;
+  }
+
+  .sort-button {
+    font-size: 1.15rem;
   }
 
   .survey-row {
     grid-template-columns: 1fr;
+    min-height: 8.45rem;
+    padding: 1.05rem 1.1rem;
+    border-radius: 0.25rem 3rem 0.25rem 0.25rem;
+    overflow: hidden;
+  }
+
+  .survey-row strong {
+    font-size: 1.22rem;
+    overflow-wrap: anywhere;
+  }
+
+  .survey-row p {
+    display: none;
+  }
+
+  .survey-row small {
+    justify-self: end;
+  }
+
+  .survey-list {
+    max-height: none;
+    overflow-y: visible;
+    padding-inline-end: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__phone,
+  .home-hero__copy h1,
+  .home-hero__copy p,
+  .home-surveys > h2,
+  .ending-surveys,
+  .survey-toolbar,
+  .survey-list {
+    animation: none;
   }
 }

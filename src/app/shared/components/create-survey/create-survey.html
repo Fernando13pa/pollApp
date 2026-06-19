@@ -1,4 +1,8 @@
 <main class="create-page">
+  <a class="create-mobile-brand" routerLink="" aria-label="Poll App home">
+    <img src="imgs/poll_app_black_hero.svg" alt="Poll App" />
+  </a>
+
   <section class="survey-overlay" aria-labelledby="create-title">
     <header class="survey-overlay__header">
       <div>
@@ -12,7 +16,11 @@
       </a>
     </header>
 
-    <form class="survey-form" (submit)="$event.preventDefault(); publish()">
+    <form
+      class="survey-form"
+      [class.survey-form--expanded]="hasExpandedForm()"
+      (submit)="$event.preventDefault(); publish()"
+    >
       <section class="survey-form__top" aria-label="Survey information">
         <div class="survey-field survey-field--name">
           <label for="survey-name">
@@ -23,7 +31,7 @@
               id="survey-name"
               type="text"
               [value]="surveyTitle()"
-              (input)="surveyTitle.set($any($event.target).value)"
+              (input)="surveyTitle.set(inputValue($event))"
               placeholder="Enter survey title..."
               required
             />
@@ -40,7 +48,7 @@
               id="survey-description"
               rows="5"
               [value]="surveyDescription()"
-              (input)="surveyDescription.set($any($event.target).value)"
+              (input)="surveyDescription.set(inputValue($event))"
               placeholder="Describe what this survey is about..."
             ></textarea>
             <button type="button" aria-label="Clear description" (click)="surveyDescription.set('')">
@@ -54,9 +62,11 @@
           <div class="field-action">
             <input
               id="survey-date"
-              type="date"
+              type="text"
+              inputmode="numeric"
               [value]="surveyEndDate()"
-              (input)="surveyEndDate.set($any($event.target).value)"
+              (input)="surveyEndDate.set(inputValue($event))"
+              placeholder="tt.mm.jjjj"
             />
             <button type="button" aria-label="Clear end date" (click)="surveyEndDate.set('')">
               <img src="asset/delete.svg" alt="" />
@@ -65,22 +75,48 @@
         </div>
 
         <div class="survey-field survey-field--tag">
-          <label for="survey-tag">Choose category <span>(optional)</span></label>
-          <div class="field-action">
-            <select
-              id="survey-tag"
-              [value]="surveyTag()"
-              (change)="surveyTag.set($any($event.target).value)"
+          <div class="category-picker">
+            <button
+              class="category-select"
+              type="button"
+              [attr.aria-expanded]="isCategoryMenuOpen()"
+              aria-haspopup="listbox"
+              (click)="toggleCategoryMenu()"
             >
+              <span>Choose category</span>
+              <img
+                [src]="isCategoryMenuOpen() ? 'asset/arrow_drop_up_orange.svg' : 'asset/arrow_drop_down_white.svg'"
+                alt=""
+              />
+            </button>
+
+            @if (isCategoryMenuOpen()) {
+              <div class="category-options" role="listbox" aria-label="Choose category">
               @for (cat of CATEGORIES; track cat) {
-                <option [value]="cat">{{ cat }}</option>
+                  <button
+                    type="button"
+                    role="option"
+                    [attr.aria-selected]="surveyTag() === cat"
+                    (click)="selectCategory(cat)"
+                  >
+                    {{ cat }}
+                  </button>
               }
-            </select>
+              </div>
+            }
           </div>
+          <p class="selected-category" [class.selected-category--empty]="!surveyTag()">
+            {{ surveyTag() || 'No category selected' }}
+          </p>
         </div>
       </section>
 
-      <section class="question-grid" aria-label="Survey questions">
+      <section
+        class="question-grid"
+        [class.question-grid--single]="isSingleQuestion()"
+        [class.question-grid--single-expanded]="hasExpandedSingleQuestion()"
+        aria-label="Survey questions"
+      >
         @for (question of questions(); track $index; let qi = $index) {
           <article class="question-card">
             <div class="question-title">
@@ -103,7 +139,7 @@
               [id]="'question-' + qi"
               type="text"
               [value]="question.title"
-              (input)="setQuestionTitle(qi, $any($event.target).value)"
+              (input)="setQuestionTitle(qi, inputValue($event))"
               placeholder="Enter your question..."
             />
 
@@ -116,7 +152,7 @@
                 <input
                   type="checkbox"
                   [checked]="question.multiple"
-                  (change)="setQuestionMultiple(qi, $any($event.target).checked)"
+                  (change)="setQuestionMultiple(qi, checkboxChecked($event))"
                 />
                 <span>Allow multiple answers.</span>
               </label>
@@ -129,7 +165,7 @@
                   [id]="'answer-' + qi + '-' + ai"
                   type="text"
                   [value]="answer.text"
-                  (input)="setAnswerText(qi, ai, $any($event.target).value)"
+                  (input)="setAnswerText(qi, ai, inputValue($event))"
                   placeholder="Enter answer option..."
                 />
                 @if (question.answers.length > 2) {
@@ -158,7 +194,8 @@
       </section>
 
       <button class="publish-button" type="submit" [disabled]="!isValid()">
-        Publish
+        <span>Publish</span>
+        <span class="publish-button__check" aria-hidden="true"></span>
       </button>
     </form>
   </section>

@@ -5,19 +5,24 @@
 .create-page {
   display: grid;
   min-height: 100vh;
-  place-items: start center;
+  place-items: center;
   padding: clamp(2rem, 5vw, 4.5rem);
   background: #fbfafb;
+}
+
+.create-mobile-brand {
+  display: none;
 }
 
 .survey-overlay {
   position: relative;
   width: min(100%, 73rem);
-  min-height: clamp(42rem, 82vh, 52.8rem);
+  min-height: clamp(44rem, 82vh, 52.75rem);
   padding: clamp(2.5rem, 4vw, 4rem) clamp(2.25rem, 5vw, 3.75rem);
   color: #ffffff;
   background: #35273a;
   border-radius: 0 6.5rem 0.25rem 0.25rem;
+  animation: overlay-pop-in 360ms cubic-bezier(0.18, 0.9, 0.22, 1) both;
 }
 
 .survey-overlay__header {
@@ -34,6 +39,7 @@
   padding-inline: 0.55rem;
   color: #16111a;
   background: #ffcfa1;
+  border-radius: 0 0.72rem 0 0;
   font-family: "Mulish", "Segoe UI", sans-serif;
   font-size: 1rem;
   font-weight: 600;
@@ -84,17 +90,22 @@ h1 {
 
 .survey-form {
   display: grid;
-  gap: 3.2rem;
+  align-content: start;
+  gap: 2.35rem;
   margin-block-start: 2.25rem;
-  padding: 2.65rem 2.1rem 3rem;
+  padding: 2.8rem 3.25rem 2.45rem;
   background: #8e709929;
   border-radius: 0.2rem 5.2rem 0.2rem 0.2rem;
+}
+
+.survey-form--expanded {
+  padding-block-end: 2.1rem;
 }
 
 .survey-form__top {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 0.65rem 3.9rem;
+  gap: 0.65rem 4.85rem;
 }
 
 .survey-field {
@@ -107,7 +118,7 @@ h1 {
 }
 
 .survey-field--description {
-  grid-column: 7 / 12;
+  grid-column: 7 / 13;
   grid-row: span 2;
 }
 
@@ -117,7 +128,9 @@ h1 {
 }
 
 label,
+.field-label,
 .category-button,
+.category-select,
 .answer-header strong,
 .link-action,
 .add-question-button,
@@ -126,8 +139,13 @@ label,
 }
 
 label,
+.field-label,
 .category-button,
+.category-select,
 .answer-header strong {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
   color: #ffffff;
   font-size: 1.15rem;
   font-weight: 900;
@@ -135,6 +153,7 @@ label,
 }
 
 .survey-field > label,
+.field-label,
 .category-button span {
   width: max-content;
   white-space: nowrap;
@@ -153,8 +172,11 @@ label span {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 2.3rem;
   color: #35273a;
   background: #fbfafb;
@@ -168,14 +190,30 @@ textarea {
 }
 
 textarea {
-  min-height: 6.8rem;
+  min-height: 6.1rem;
   resize: vertical;
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: 0.16rem solid #ee9236;
   outline-offset: 0.12rem;
+}
+
+.field-action input,
+.field-action textarea,
+.field-action select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.question-card,
+.question-grid,
+.answer-row,
+.answer-row input,
+.question-card > input {
+  min-width: 0;
 }
 
 .field-action button,
@@ -190,6 +228,11 @@ textarea:focus {
   border: 0;
   background: transparent;
   cursor: pointer;
+  border-radius: 0.22rem;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    outline-color 160ms ease;
 }
 
 .field-action button img,
@@ -200,30 +243,110 @@ textarea:focus {
 }
 
 .survey-field--tag {
+  position: relative;
   grid-column: 4 / 7;
   align-self: end;
 }
 
-select {
-  width: 100%;
-  min-height: 2.3rem;
-  color: #35273a;
-  background: #fbfafb;
+.category-picker {
+  position: relative;
+  min-width: 0;
+}
+
+.category-select {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 1.9rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0;
+  color: #ffffff;
+  background: transparent;
   border: 0;
-  border-radius: 0.35rem 1rem 0.35rem 0.35rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.category-select span {
+  white-space: nowrap;
+}
+
+.category-select img {
+  width: 1.25rem;
+  height: 1.25rem;
+  transition: transform 180ms ease;
+}
+
+.category-select[aria-expanded="true"] img {
+  transform: translateY(-0.08rem);
+}
+
+.category-options {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  top: calc(100% + 0.35rem);
+  width: min(18rem, 82vw);
+  display: grid;
+  overflow: hidden;
+  background: #fbfafb;
+  border-radius: 0.4rem;
+  box-shadow: 0 0.8rem 1.5rem rgb(0 0 0 / 22%);
+}
+
+.selected-category {
+  min-height: 1.1rem;
+  margin: 0.35rem 0 0 0.75rem;
+  color: #ffcfa1;
+  font-family: "Mulish", "Segoe UI", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.selected-category--empty {
+  visibility: hidden;
+}
+
+.category-options button {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.8rem;
+  border: 0;
+  color: #35273a;
+  background: transparent;
+  cursor: pointer;
   font-family: "Mulish", "Segoe UI", sans-serif;
   font-size: 1rem;
-  font-weight: 500;
-  padding: 0.45rem 0.85rem;
-  cursor: pointer;
-  appearance: auto;
+  text-align: left;
+}
+
+.category-options button:hover,
+.category-options button[aria-selected="true"] {
+  background: #ffcfa1;
 }
 
 .question-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 28rem));
-  gap: 2rem clamp(2.5rem, 7vw, 6.5rem);
+  gap: 1.7rem clamp(2.5rem, 7vw, 6.5rem);
   align-items: start;
+}
+
+.question-grid--single .add-question-button {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  justify-self: start;
+  margin-block-start: 0;
+}
+
+.question-grid--single-expanded .add-question-button {
+  grid-column: 1;
+  grid-row: auto;
+  justify-self: start;
+  margin-block-start: 0.1rem;
 }
 
 .question-card {
@@ -311,13 +434,38 @@ select {
 .publish-button {
   position: absolute;
   right: clamp(2.25rem, 5vw, 3.75rem);
-  bottom: clamp(2rem, 4vw, 2.5rem);
+  bottom: clamp(1.5rem, 2.5vw, 2rem);
   min-height: 3.05rem;
+  gap: 0;
+  overflow: hidden;
   padding-inline: 1.1rem;
   color: #16111a;
   background: #ffcfa1;
   border-radius: 0.55rem;
   font-size: 1.15rem;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 180ms ease,
+    box-shadow 220ms ease;
+}
+
+.survey-form--expanded .publish-button {
+  position: static;
+  justify-self: end;
+  margin-block-start: 1.1rem;
+}
+
+.publish-button__check {
+  width: 1rem;
+  height: 0.55rem;
+  margin-inline-start: -1rem;
+  border: solid #35273a;
+  border-width: 0 0 0.16rem 0.16rem;
+  opacity: 0;
+  transform: rotate(-45deg) translateX(-0.2rem) scale(0.7);
+  transition:
+    margin 220ms ease,
+    transform 240ms ease;
 }
 
 .cancel-button:hover,
@@ -341,15 +489,46 @@ select {
 .publish-button:hover {
   background: #ee9236;
   box-shadow: 0 0.7rem 1.25rem rgb(0 0 0 / 18%);
-  transform: translateY(-0.12rem);
+  gap: 0.8rem;
+  padding-inline-end: 1.05rem;
+  transform: translateY(-0.14rem) scale(1.025);
+}
+
+.publish-button:hover .publish-button__check {
+  margin-inline-start: 0;
+  opacity: 1;
+  transform: rotate(-45deg) translate(0.08rem, -0.08rem) scale(1.08);
 }
 
 .field-action button:hover,
 .question-title button:hover,
-.answer-row button:hover,
+.answer-row button:hover {
+  background: #ffcfa1;
+  outline: 0.12rem solid #ffcfa1;
+  transform: translateY(-0.08rem);
+}
+
+.field-action button:hover img,
+.question-title button:hover img,
+.answer-row button:hover img {
+  filter: brightness(0) saturate(100%) invert(17%) sepia(13%) saturate(1201%) hue-rotate(241deg) brightness(92%) contrast(88%);
+}
+
 .category-button:hover,
 .link-action:hover {
   transform: translateY(-0.08rem);
+}
+
+@keyframes overlay-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .publish-toast {
@@ -419,47 +598,256 @@ select {
   .add-question-button {
     align-self: start;
   }
+
+  .question-grid--single .add-question-button {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: start;
+  }
 }
 
 @media (max-width: 42rem) {
   .create-page {
+    display: block;
     padding: 0;
   }
 
+  .create-mobile-brand {
+    display: inline-flex;
+    width: 7.8rem;
+    margin: 4.2rem 0 4.8rem 1.45rem;
+  }
+
+  .create-mobile-brand img {
+    width: 100%;
+    height: auto;
+  }
+
   .survey-overlay {
-    min-height: 100vh;
-    padding: 1.25rem;
-    border-radius: 0;
+    min-height: auto;
+    padding: 3.4rem 1.5rem 3rem;
+    border-radius: 0 5.6rem 0.35rem 0.35rem;
   }
 
   .survey-overlay__header {
-    display: grid;
+    display: flex;
+    align-items: start;
   }
 
   .cancel-button {
     margin-block-start: 0;
-    justify-self: start;
+    width: 3.15rem;
+    min-height: 3.15rem;
+    padding: 0;
+    border-radius: 0.72rem;
+  }
+
+  .cancel-button span {
+    display: none;
+  }
+
+  .cancel-button img {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .draft-badge {
+    min-height: 2.15rem;
+    padding-inline: 0.75rem;
+    border-radius: 0 0.7rem 0 0;
+    font-size: 1.15rem;
+  }
+
+  h1 {
+    max-width: 8ch;
+    margin-block-start: 1.15rem;
+    font-size: clamp(4rem, 18vw, 4.9rem);
+    white-space: normal;
   }
 
   .survey-form {
-    gap: 2rem;
-    padding: 1rem;
-    border-radius: 0.2rem 2.2rem 0.2rem 0.2rem;
+    gap: 2.45rem;
+    margin-block-start: 2.75rem;
+    padding: 2.45rem 0.9rem 2.3rem;
+    border-radius: 0.35rem 5.3rem 0.35rem 0.35rem;
+    overflow: hidden;
+  }
+
+  .survey-field,
+  .category-button {
+    order: 0;
+  }
+
+  .category-button {
+    order: 2;
+    margin-block: 0.65rem 1.15rem;
+  }
+
+  .survey-field--date {
+    order: 3;
+  }
+
+  .survey-field--description {
+    order: 4;
+  }
+
+  label,
+  .field-label,
+  .category-button,
+  .category-select,
+  .answer-header strong {
+    font-size: 1.15rem;
+  }
+
+  .survey-field > label,
+  .field-label,
+  .category-button span {
+    width: auto;
+    white-space: normal;
   }
 
   .field-action {
     align-items: end;
   }
 
+  input,
+  textarea,
+  select,
+  .category-select {
+    min-height: 2.35rem;
+    border-radius: 0.45rem 1.25rem 0.45rem 0.45rem;
+    font-size: 1rem;
+  }
+
+  .category-options {
+    width: min(13rem, 100%);
+    margin-block-start: 0.2rem;
+    box-shadow: 0 0.8rem 1.5rem rgb(0 0 0 / 18%);
+  }
+
+  .category-options button {
+    min-height: 1.9rem;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    min-height: 6.9rem;
+  }
+
+  .category-select {
+    min-height: 1.9rem;
+    padding: 0;
+    border-radius: 0.25rem;
+    color: #ffffff;
+    background: transparent;
+    font-size: 1.15rem;
+  }
+
+  .category-select[aria-expanded="true"] {
+    padding-inline: 0.35rem;
+    background: #5a4561;
+  }
+
+  .category-select[aria-expanded="true"] img {
+    transform: translateY(-0.08rem);
+  }
+
+  .field-action button,
+  .question-title button,
+  .answer-row button {
+    width: 2rem;
+    flex-basis: 2rem;
+  }
+
+  .field-action button img,
+  .question-title button img,
+  .answer-row button img {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .question-grid {
+    gap: 3.3rem;
+  }
+
+  .question-card {
+    gap: 1.15rem;
+  }
+
+  .question-title label {
+    font-size: 1.15rem;
+  }
+
   .answer-header {
-    align-items: start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .multi-check {
+    font-size: 0.9rem;
+  }
+
+  .multi-check input {
+    width: 1.15rem;
+    min-height: 1.15rem;
+  }
+
+  .answer-row {
+    grid-template-columns: 1.7rem minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .answer-row label {
+    font-size: 1.15rem;
+  }
+
+  .link-action {
+    margin-block-start: 1rem;
+    margin-inline-start: 1.15rem;
+    font-size: 1rem;
+  }
+
+  .link-action img {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .add-question-button {
+    min-height: 2.55rem;
+    justify-self: center;
+    margin-block-start: 2.2rem;
+    padding-inline: 1.1rem;
+    font-size: 1rem;
   }
 
   .publish-button {
     position: static;
     width: fit-content;
-    margin-block-start: 1.5rem;
-    margin-inline-start: auto;
+    gap: 0;
+    min-height: 4rem;
+    margin: 4.2rem auto 0;
+    padding-inline: 1.55rem;
+    background: #ffb770;
+    font-size: 1.6rem;
+  }
+
+  .publish-button__check {
+    width: 1.15rem;
+    height: 0.65rem;
+    margin-inline-start: -1.15rem;
+    border-width: 0 0 0.18rem 0.18rem;
+    opacity: 0;
+    transform: rotate(-45deg) translateX(-0.25rem) scale(0.7);
+  }
+
+  .publish-button:hover {
+    gap: 0.85rem;
+  }
+
+  .publish-button:hover .publish-button__check {
+    margin-inline-start: 0;
+    opacity: 1;
+    transform: rotate(-45deg) translate(0.08rem, -0.08rem) scale(1.05);
   }
 }
