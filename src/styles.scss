@@ -649,6 +649,7 @@ p {
   .app-header {
     width: min(100% - 2rem, 48rem);
     margin-block-start: 1.5rem;
+    margin-inline: auto;
   }
 
   .main-nav {
@@ -683,7 +684,7 @@ p {
   }
 
   .app-header {
-    width: min(100% - 1.25rem, 28rem);
+    width: min(100% - 2rem, 48rem);
     margin: 1rem auto -1rem;
   }
 

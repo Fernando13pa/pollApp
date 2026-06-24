@@ -22,6 +22,7 @@ interface DraftQuestion {
 export class CreateSurvey {
   private readonly surveyService = inject(Surveys);
   private readonly router = inject(Router);
+  private readonly today = this.toDateOnly(new Date());
 
   readonly surveyTitle = signal('');
   readonly surveyDescription = signal('');
@@ -48,22 +49,32 @@ export class CreateSurvey {
 
   readonly isEndDateValid = computed(() => {
     const value = this.surveyEndDate().trim();
-    if (!value) return false;
+    if (!value) return true;
 
+    const date = this.parseEndDate(value);
+    return date !== null && date >= this.today;
+  });
+
+  private parseEndDate(value: string): Date | null {
     const match = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
-    if (!match) return false;
+    if (!match) return null;
 
     const day = Number(match[1]);
     const month = Number(match[2]);
     const year = Number(match[3]);
     const date = new Date(year, month - 1, day);
 
-    return (
+    const isRealDate =
       date.getFullYear() === year &&
       date.getMonth() === month - 1 &&
-      date.getDate() === day
-    );
-  });
+      date.getDate() === day;
+
+    return isRealDate ? this.toDateOnly(date) : null;
+  }
+
+  private toDateOnly(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
 
   /** True when the title is filled and every question has a title plus at least two answers. */
   readonly isValid = computed(() => {
@@ -177,7 +188,15 @@ export class CreateSurvey {
     this.questions.update((qs) =>
       qs.map((q, i) =>
         i === questionIndex
-          ? { ...q, answers: q.answers.filter((_, ai) => ai !== answerIndex) }
+          ? {
+              ...q,
+              answers:
+                q.answers.length > 2
+                  ? q.answers.filter((_, ai) => ai !== answerIndex)
+                  : q.answers.map((answer, ai) =>
+                      ai === answerIndex ? { text: '' } : answer,
+                    ),
+            }
           : q,
       ),
     );

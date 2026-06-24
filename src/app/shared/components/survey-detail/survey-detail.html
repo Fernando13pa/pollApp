@@ -88,7 +88,7 @@
         [disabled]="hasVoted()"
         (click)="submitVote()"
       >
-        <span>{{ hasVoted() ? 'Vote submitted!' : 'Complete survey' }}</span>
+        <span>{{ hasVoted() ? 'Completed' : 'Complete survey' }}</span>
         <span aria-hidden="true"></span>
       </button>
     </section>
@@ -101,11 +101,15 @@
         (click)="toggleResults()"
       >
         <span>{{ showResults() ? 'Close results' : 'Show results' }}</span>
-        <span aria-hidden="true"></span>
+        <img
+          [src]="showResults() ? 'asset/arrow_drop_up_white.svg' : 'asset/arrow_drop_down_white.svg'"
+          aria-hidden="true"
+          alt=""
+        />
       </button>
 
       @if (showResults()) {
-        <app-survey-results [questions]="survey().questions"></app-survey-results>
+        <app-survey-results [questions]="displayQuestions()"></app-survey-results>
       }
     </section>
   </div>

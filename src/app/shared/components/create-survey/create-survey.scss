@@ -16,12 +16,12 @@
 
 .survey-overlay {
   position: relative;
-  width: min(100%, 73rem);
-  min-height: clamp(44rem, 82vh, 52.75rem);
-  padding: clamp(2.5rem, 4vw, 4rem) clamp(2.25rem, 5vw, 3.75rem);
+  width: min(100%, 72.9rem);
+  min-height: 52.8rem;
+  padding: 2.5rem 3.75rem 9rem;
   color: #ffffff;
   background: #35273a;
-  border-radius: 0 6.5rem 0.25rem 0.25rem;
+  border-radius: 0.25rem 6.5rem 0.25rem 0.25rem;
   animation: overlay-pop-in 360ms cubic-bezier(0.18, 0.9, 0.22, 1) both;
 }
 
@@ -32,14 +32,18 @@
   gap: 2rem;
 }
 
+.survey-overlay__header > div {
+  min-width: 0;
+}
+
 .draft-badge {
   display: inline-flex;
-  min-height: 1.6rem;
+  min-height: 1.65rem;
   align-items: center;
-  padding-inline: 0.55rem;
+  padding-inline: 0.6rem;
   color: #16111a;
   background: #ffcfa1;
-  border-radius: 0 0.72rem 0 0;
+  border-radius: 0 0.65rem 0 0;
   font-family: "Mulish", "Segoe UI", sans-serif;
   font-size: 1rem;
   font-weight: 600;
@@ -49,7 +53,7 @@ h1 {
   margin: 0.75rem 0 0;
   color: #ee9236;
   font-family: "Nerko One", "Comic Sans MS", cursive;
-  font-size: clamp(3.4rem, 4.35vw, 4.25rem);
+  font-size: 3.45rem;
   font-weight: 400;
   line-height: 0.9;
   letter-spacing: 0;
@@ -76,14 +80,20 @@ h1 {
 
 .cancel-button {
   gap: 0.65rem;
-  min-height: 2.5rem;
-  margin-block-start: 3rem;
-  padding: 0.45rem 0.8rem;
+  flex: 0 0 auto;
+  min-height: 2.55rem;
+  margin-block-start: 3.45rem;
+  padding: 0.45rem 0.78rem;
   border-radius: 0.55rem;
   font-size: 1rem;
 }
 
+.cancel-button span {
+  white-space: nowrap;
+}
+
 .cancel-button img {
+  flex: 0 0 auto;
   width: 1.35rem;
   height: 1.35rem;
 }
@@ -91,9 +101,10 @@ h1 {
 .survey-form {
   display: grid;
   align-content: start;
-  gap: 2.35rem;
-  margin-block-start: 2.25rem;
-  padding: 2.8rem 3.25rem 2.45rem;
+  gap: 3.9rem;
+  margin-block-start: 2.7rem;
+  min-height: 34.25rem;
+  padding: 2.7rem 2.1rem 2.9rem;
   background: #8e709929;
   border-radius: 0.2rem 5.2rem 0.2rem 0.2rem;
 }
@@ -108,26 +119,52 @@ fieldset {
 
 .survey-form__top {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 0.65rem 4.85rem;
+  grid-template-columns: 16rem 14rem minmax(0, 26.2rem) 1.5rem;
+  gap: 0.62rem 3.05rem;
+  align-items: start;
 }
 
 .survey-field {
   display: grid;
+  grid-template-columns: 1fr auto;
   gap: 0.3rem;
 }
 
+.survey-field > label {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.survey-field > input,
+.survey-field > textarea {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.field-clear {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+}
+
 .survey-field--name {
-  grid-column: 1 / 6;
+  grid-column: 1 / 3;
 }
 
 .survey-field--description {
-  grid-column: 7 / 13;
+  grid-column: 3 / 5;
   grid-row: span 2;
 }
 
+@media (min-width: 74.01rem) {
+  .survey-field--description .field-clear {
+    align-self: start;
+    margin-block-start: 0.35rem;
+  }
+}
+
 .survey-field--date {
-  grid-column: 1 / 4;
+  grid-column: 1;
   max-width: 16rem;
 }
 
@@ -167,7 +204,6 @@ label span {
   font-weight: 500;
 }
 
-.field-action,
 .question-title,
 .answer-row {
   display: flex;
@@ -185,7 +221,7 @@ select {
   color: #35273a;
   background: #fbfafb;
   border: 0;
-  border-radius: 0.35rem 1rem 0.35rem 0.35rem;
+  border-radius: 0.35rem 1.05rem 0.35rem 0.35rem;
   font-family: "Mulish", "Segoe UI", sans-serif;
   font-size: 1rem;
   font-weight: 500;
@@ -194,7 +230,7 @@ select {
 }
 
 textarea {
-  min-height: 6.1rem;
+  min-height: 6.8rem;
   resize: vertical;
 }
 
@@ -209,13 +245,6 @@ input[aria-invalid=true] {
   outline: solid red;
 }
 
-.field-action input,
-.field-action textarea,
-.field-action select {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
 .question-card,
 .question-grid,
 .answer-row,
@@ -224,7 +253,7 @@ input[aria-invalid=true] {
   min-width: 0;
 }
 
-.field-action button,
+.field-clear,
 .question-title button,
 .answer-row button {
   display: grid;
@@ -243,7 +272,7 @@ input[aria-invalid=true] {
     outline-color 160ms ease;
 }
 
-.field-action button img,
+.field-clear img,
 .question-title button img,
 .answer-row button img {
   width: 1.35rem;
@@ -252,9 +281,10 @@ input[aria-invalid=true] {
 
 .survey-field--tag {
   position: relative;
-  grid-column: 4 / 7;
+  grid-column: 2;
   align-self: end;
   z-index: 5;
+  grid-template-columns: 1fr;
 }
 
 .category-picker {
@@ -353,8 +383,8 @@ input[aria-invalid=true] {
 
 .question-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 28rem));
-  gap: 1.7rem clamp(2.5rem, 7vw, 6.5rem);
+  grid-template-columns: 26.8rem 14rem;
+  gap: 1.7rem 5.6rem;
   align-items: start;
 }
 
@@ -363,7 +393,7 @@ input[aria-invalid=true] {
   grid-row: 1;
   align-self: start;
   justify-self: start;
-  margin-block-start: 0;
+  margin-block-start: 0.1rem;
 }
 
 .question-grid--single-expanded .add-question-button {
@@ -391,7 +421,7 @@ input[aria-invalid=true] {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-block-start: 0.15rem;
+  margin-block-start: 0.55rem;
 }
 
 .multi-check {
@@ -441,11 +471,11 @@ input[aria-invalid=true] {
 
 .add-question-button {
   width: fit-content;
-  min-height: 2.55rem;
+  min-height: 2.5rem;
   gap: 0.6rem;
   grid-column: 1;
   align-self: start;
-  padding: 0.45rem 0.75rem;
+  padding: 0.45rem 0.78rem;
   border-radius: 0.55rem;
   font-size: 1rem;
 }
@@ -457,8 +487,8 @@ input[aria-invalid=true] {
 
 .publish-button {
   position: absolute;
-  right: clamp(2.25rem, 5vw, 3.75rem);
-  bottom: clamp(1.5rem, 2.5vw, 2rem);
+  right: 3.35rem;
+  bottom: 3.5rem;
   min-height: 3.05rem;
   gap: 0;
   overflow: hidden;
@@ -471,12 +501,6 @@ input[aria-invalid=true] {
     transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
     background-color 180ms ease,
     box-shadow 220ms ease;
-}
-
-.survey-form--expanded .publish-button {
-  position: static;
-  justify-self: end;
-  margin-block-start: 1.1rem;
 }
 
 .publish-button__check {
@@ -526,7 +550,7 @@ input[aria-invalid=true] {
   transform: rotate(-45deg) translate(0.08rem, -0.08rem) scale(1.08);
 }
 
-.field-action button:hover,
+.field-clear:hover,
 .question-title button:hover,
 .answer-row button:hover {
   background: #ffcfa1;
@@ -534,7 +558,7 @@ input[aria-invalid=true] {
   transform: translateY(-0.08rem);
 }
 
-.field-action button:hover img,
+.field-clear:hover img,
 .question-title button:hover img,
 .answer-row button:hover img {
   filter: brightness(0) saturate(100%) invert(17%) sepia(13%) saturate(1201%) hue-rotate(241deg) brightness(92%) contrast(88%);
@@ -582,11 +606,36 @@ input[aria-invalid=true] {
   border: 0;
   background: transparent;
   cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+  color: inherit;
 }
 
-@media (max-width: 62rem) {
+@media (max-width: 74rem) {
   .survey-overlay {
     border-radius: 0 4rem 0.25rem 0.25rem;
+  }
+
+  .survey-overlay__header {
+    gap: 1.25rem;
+  }
+
+  .survey-overlay__header > div {
+    flex: 1 1 auto;
+  }
+
+  h1 {
+    max-width: none;
+    font-size: clamp(2.8rem, 5.4vw, 3.45rem);
+    white-space: normal;
+  }
+
+  .cancel-button {
+    margin-block-start: 2.65rem;
+  }
+
+  .survey-form {
+    padding-inline: clamp(1.5rem, 4vw, 2.25rem);
   }
 
   .survey-form__top,
@@ -650,7 +699,7 @@ input[aria-invalid=true] {
 
   .survey-overlay {
     min-height: auto;
-    padding: 3.4rem 1.5rem 3rem;
+    padding: 3.4rem 1.5rem 9rem;
     border-radius: 0 5.6rem 0.35rem 0.35rem;
   }
 
@@ -684,7 +733,7 @@ input[aria-invalid=true] {
   }
 
   h1 {
-    max-width: 8ch;
+    max-width: none;
     margin-block-start: 1.15rem;
     font-size: clamp(4rem, 18vw, 4.9rem);
     white-space: normal;
@@ -731,10 +780,6 @@ input[aria-invalid=true] {
     white-space: normal;
   }
 
-  .field-action {
-    align-items: end;
-  }
-
   input,
   textarea,
   select,
@@ -758,18 +803,37 @@ input[aria-invalid=true] {
     min-height: 1.9rem;
   }
 
-  .field-action button,
+  .field-clear,
   .question-title button,
   .answer-row button {
     width: 2rem;
     flex-basis: 2rem;
   }
 
-  .field-action button img,
+  .field-clear img,
   .question-title button img,
   .answer-row button img {
-    width: 1.8rem;
-    height: 1.8rem;
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  .survey-field--name,
+  .survey-field--description,
+  .survey-field--date {
+    grid-template-columns: 1fr auto;
+    row-gap: 0.3rem;
+  }
+
+  .survey-field--name > input,
+  .survey-field--description > textarea,
+  .survey-field--date > input {
+    grid-column: 1 / -1;
+  }
+
+  .field-clear {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
   }
 
   .question-grid {
@@ -787,10 +851,16 @@ input[aria-invalid=true] {
   .answer-header {
     align-items: center;
     flex-direction: row;
+    gap: 0.6rem;
+  }
+
+  .answer-header strong {
+    font-size: 1rem;
+    white-space: nowrap;
   }
 
   .multi-check {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
   }
 
   .multi-check input {
@@ -799,12 +869,26 @@ input[aria-invalid=true] {
   }
 
   .answer-row {
-    grid-template-columns: 1.7rem minmax(0, 1fr) auto;
-    align-items: end;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 0.3rem;
+    align-items: center;
   }
 
   .answer-row label {
+    grid-column: 1;
+    grid-row: 1;
     font-size: 1.15rem;
+  }
+
+  .answer-row input {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .answer-row button {
+    grid-column: 2;
+    grid-row: 1;
   }
 
   .link-action {
@@ -826,15 +910,24 @@ input[aria-invalid=true] {
     font-size: 1rem;
   }
 
+  .question-grid--single .add-question-button,
+  .question-grid--single-expanded .add-question-button {
+    justify-self: center;
+  }
+
   .publish-button {
-    position: static;
+    position: absolute;
+    right: auto;
+    bottom: 3.8rem;
+    left: 50%;
     width: fit-content;
     gap: 0;
     min-height: 4rem;
-    margin: 4.2rem auto 0;
+    margin: 0;
     padding-inline: 1.55rem;
     background: #ffb770;
     font-size: 1.6rem;
+    transform: translateX(-50%);
   }
 
   .publish-button__check {
@@ -848,6 +941,7 @@ input[aria-invalid=true] {
 
   .publish-button:hover {
     gap: 0.85rem;
+    transform: translateX(-50%) translateY(-0.14rem) scale(1.025);
   }
 
   .publish-button:hover .publish-button__check {

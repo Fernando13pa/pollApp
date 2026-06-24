@@ -17,6 +17,7 @@
     </header>
 
     <form
+      id="create-survey-form"
       class="survey-form"
       [class.survey-form--expanded]="hasExpandedForm()"
       novalidate
@@ -28,53 +29,47 @@
           <label for="survey-name">
             Survey name <em class="required-mark" aria-label="required">*</em>
           </label>
-          <div class="field-action">
-            <input
-              id="survey-name"
-              type="text"
-              [value]="surveyTitle()"
-              (input)="surveyTitle.set(inputValue($event))"
-              [attr.aria-invalid]="isSurveyTitleInvalid()"
-              placeholder="Enter survey title..."
-            />
-            <button type="button" aria-label="Clear survey name" (click)="surveyTitle.set('')">
-              <img src="asset/delete.svg" alt="" />
-            </button>
-          </div>
+          <button type="button" class="field-clear" aria-label="Clear survey name" (click)="surveyTitle.set('')">
+            <img src="asset/delete.svg" alt="" />
+          </button>
+          <input
+            id="survey-name"
+            type="text"
+            [value]="surveyTitle()"
+            (input)="surveyTitle.set(inputValue($event))"
+            [attr.aria-invalid]="isSurveyTitleInvalid()"
+            placeholder="Enter survey title..."
+          />
         </div>
 
         <div class="survey-field survey-field--description">
           <label for="survey-description">Describing text <span>(optional)</span></label>
-          <div class="field-action">
-            <textarea
-              id="survey-description"
-              rows="5"
-              [value]="surveyDescription()"
-              (input)="surveyDescription.set(inputValue($event))"
-              placeholder="Describe what this survey is about..."
-            ></textarea>
-            <button type="button" aria-label="Clear description" (click)="surveyDescription.set('')">
-              <img src="asset/delete.svg" alt="" />
-            </button>
-          </div>
+          <button type="button" class="field-clear" aria-label="Clear description" (click)="surveyDescription.set('')">
+            <img src="asset/delete.svg" alt="" />
+          </button>
+          <textarea
+            id="survey-description"
+            rows="5"
+            [value]="surveyDescription()"
+            (input)="surveyDescription.set(inputValue($event))"
+            placeholder="Describe what this survey is about..."
+          ></textarea>
         </div>
 
         <div class="survey-field survey-field--date">
           <label for="survey-date">Set end date <span>(optional)</span></label>
-          <div class="field-action">
-            <input
-              id="survey-date"
-              type="text"
-              inputmode="numeric"
-              [value]="surveyEndDate()"
-              (input)="surveyEndDate.set(inputValue($event))"
-              [attr.aria-invalid]="isEndDateInvalid()"
-              placeholder="tt.mm.jjjj"
-            />
-            <button type="button" aria-label="Clear end date" (click)="surveyEndDate.set('')">
-              <img src="asset/delete.svg" alt="" />
-            </button>
-          </div>
+          <button type="button" class="field-clear" aria-label="Clear end date" (click)="surveyEndDate.set('')">
+            <img src="asset/delete.svg" alt="" />
+          </button>
+          <input
+            id="survey-date"
+            type="text"
+            inputmode="numeric"
+            [value]="surveyEndDate()"
+            (input)="surveyEndDate.set(inputValue($event))"
+            [attr.aria-invalid]="isEndDateInvalid()"
+            placeholder="tt.mm.jjjj"
+          />
         </div>
 
         <div class="survey-field survey-field--tag">
@@ -132,15 +127,13 @@
                 {{ qi + 1 }}. Question
                 <em class="required-mark" aria-label="required">*</em>
               </label>
-              @if (questions().length > 1) {
-                <button
-                  type="button"
-                  [attr.aria-label]="'Delete question ' + (qi + 1)"
-                  (click)="removeQuestion(qi)"
-                >
-                  <img src="asset/delete.svg" alt="" />
-                </button>
-              }
+              <button
+                type="button"
+                [attr.aria-label]="'Delete question ' + (qi + 1)"
+                (click)="removeQuestion(qi)"
+              >
+                <img src="asset/delete.svg" alt="" />
+              </button>
             </div>
 
             <input
@@ -178,15 +171,13 @@
                   [attr.aria-invalid]="isAnswerInvalid(qi, ai)"
                   placeholder="Enter answer option..."
                 />
-                @if (question.answers.length > 2) {
-                  <button
-                    type="button"
-                    [attr.aria-label]="'Delete answer ' + getLetter(ai)"
-                    (click)="removeAnswer(qi, ai)"
-                  >
-                    <img src="asset/delete.svg" alt="" />
-                  </button>
-                }
+                <button
+                  type="button"
+                  [attr.aria-label]="'Delete answer ' + getLetter(ai)"
+                  (click)="removeAnswer(qi, ai)"
+                >
+                  <img src="asset/delete.svg" alt="" />
+                </button>
               </div>
             }
 
@@ -203,16 +194,18 @@
         </button>
       </section>
 
-      <button
-        class="publish-button"
-        type="submit"
-        [disabled]="hasPublished()"
-      >
-        <span>Publish</span>
-        <span class="publish-button__check" aria-hidden="true"></span>
-      </button>
       </fieldset>
     </form>
+
+    <button
+      class="publish-button"
+      type="submit"
+      form="create-survey-form"
+      [disabled]="hasPublished()"
+    >
+      <span>Publish</span>
+      <span class="publish-button__check" aria-hidden="true"></span>
+    </button>
 
     @if (showConfirm()) {
       <div class="publish-toast" role="status" aria-live="polite">

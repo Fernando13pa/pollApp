@@ -268,6 +268,12 @@ export class Surveys {
     return all.find((survey) => survey.id === id) ?? this.surveys()[0];
   }
 
+  readonly votedSurveyIds = signal<Set<number>>(new Set());
+
+  markVoted(surveyId: number): void {
+    this.votedSurveyIds.update((set) => new Set([...set, surveyId]));
+  }
+
   /** Applies the submitted votes to both urgent and active survey signals. */
   vote(surveyId: number, votes: Map<number, string[]>): void {
     this.urgentSurveys.update((list) => this.applyVotes(list, surveyId, votes));
