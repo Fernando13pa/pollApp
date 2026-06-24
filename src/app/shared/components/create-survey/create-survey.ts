@@ -29,6 +29,8 @@ export class CreateSurvey {
   readonly surveyTag = signal('');
   readonly isCategoryMenuOpen = signal(false);
   readonly showConfirm = signal(false);
+  readonly hasPublished = signal(false);
+  readonly publishAttempted = signal(false);
   private newSurveyId: number = 0;
 
   readonly CATEGORIES = [
@@ -44,16 +46,37 @@ export class CreateSurvey {
     { title: '', multiple: false, answers: [{ text: '' }, { text: '' }] },
   ]);
 
+  readonly isEndDateValid = computed(() => {
+    const value = this.surveyEndDate().trim();
+    if (!value) return false;
+
+    const match = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+    if (!match) return false;
+
+    const day = Number(match[1]);
+    const month = Number(match[2]);
+    const year = Number(match[3]);
+    const date = new Date(year, month - 1, day);
+
+    return (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    );
+  });
+
   /** True when the title is filled and every question has a title plus at least two answers. */
   readonly isValid = computed(() => {
     const titleOk = this.surveyTitle().trim() !== '';
+    const dateOk = this.isEndDateValid();
     const questionsOk = this.questions().every(
       (q) =>
         q.title.trim() !== '' &&
         q.answers.filter((a) => a.text.trim() !== '').length >= 2,
     );
-    return titleOk && this.questions().length > 0 && questionsOk;
+    return titleOk && dateOk && this.questions().length > 0 && questionsOk;
   });
+  readonly canPublish = computed(() => this.isValid() && !this.hasPublished());
 
   readonly isSingleQuestion = computed(() => this.questions().length === 1);
   readonly hasExpandedSingleQuestion = computed(() => {
@@ -70,6 +93,28 @@ export class CreateSurvey {
 
   protected checkboxChecked(event: Event): boolean {
     return (event.target as HTMLInputElement).checked;
+  }
+
+  protected isSurveyTitleInvalid(): boolean {
+    return this.publishAttempted() && this.surveyTitle().trim() === '';
+  }
+
+  protected isEndDateInvalid(): boolean {
+    return (
+      (this.publishAttempted() || this.surveyEndDate().trim() !== '') &&
+      !this.isEndDateValid()
+    );
+  }
+
+  protected isQuestionTitleInvalid(index: number): boolean {
+    return this.publishAttempted() && this.questions()[index].title.trim() === '';
+  }
+
+  protected isAnswerInvalid(questionIndex: number, answerIndex: number): boolean {
+    if (!this.publishAttempted()) return false;
+    const question = this.questions()[questionIndex];
+    const filledAnswers = question.answers.filter((answer) => answer.text.trim() !== '').length;
+    return filledAnswers < 2 && question.answers[answerIndex].text.trim() === '';
   }
 
   getLetter(index: number): string {
@@ -155,7 +200,10 @@ export class CreateSurvey {
 
   /** Validates the form, persists the survey via the service, then shows the confirmation toast. */
   publish(): void {
+    if (this.hasPublished()) return;
+    this.publishAttempted.set(true);
     if (!this.isValid()) return;
+    this.hasPublished.set(true);
     this.newSurveyId = this.surveyService.createSurvey({
       title: this.surveyTitle(),
       description: this.surveyDescription(),

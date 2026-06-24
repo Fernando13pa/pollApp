@@ -56,15 +56,66 @@
         </button>
       </div>
 
-      <button class="sort-button" type="button" aria-label="Sort surveys by categories">
-        <span>Sort by categories</span>
-        <img src="asset/arrow_drop_down_white.svg" alt="" />
-      </button>
+      <div class="sort-dropdown" [class.sort-dropdown--open]="sortMenuOpen()">
+        <button
+          class="sort-button"
+          [class.sort-button--open]="sortMenuOpen()"
+          [class.sort-button--selected]="selectedCategory()"
+          type="button"
+          aria-haspopup="listbox"
+          [attr.aria-expanded]="sortMenuOpen()"
+          aria-label="Sort surveys by categories"
+          (click)="toggleSortMenu()"
+        >
+          <span>Sort by categories</span>
+          <img
+            class="sort-btn-arrow"
+            [src]="sortMenuOpen() ? 'asset/arrow_drop_up_white.svg' : 'asset/arrow_drop_down_white.svg'"
+            alt=""
+            aria-hidden="true"
+          />
+        </button>
+
+        @if (sortMenuOpen()) {
+          <ul class="sort-menu" role="listbox" aria-label="Filter by category">
+            <li
+              class="sort-menu__item"
+              [class.sort-menu__item--active]="selectedCategory() === null"
+              role="option"
+              tabindex="0"
+              [attr.aria-selected]="selectedCategory() === null"
+              (click)="selectCategory(null)"
+              (keydown.enter)="selectCategory(null)"
+              (keydown.space)="selectCategory(null); $event.preventDefault()"
+            >
+              All categories
+            </li>
+            @for (cat of availableCategories(); track cat) {
+              <li
+                class="sort-menu__item"
+                [class.sort-menu__item--active]="selectedCategory() === cat"
+                role="option"
+                tabindex="0"
+                [attr.aria-selected]="selectedCategory() === cat"
+                (click)="selectCategory(cat)"
+                (keydown.enter)="selectCategory(cat)"
+                (keydown.space)="selectCategory(cat); $event.preventDefault()"
+              >
+                {{ cat }}
+              </li>
+            }
+          </ul>
+        }
+
+        @if (selectedCategory()) {
+          <p class="sort-selection">{{ selectedCategory() }}</p>
+        }
+      </div>
     </div>
 
     <div class="survey-list" role="tabpanel">
       @if (activeTab() === 'active') {
-        @for (survey of surveyService.surveys(); track survey.id) {
+        @for (survey of displayedSurveys(); track survey.id) {
           <a class="survey-row" [routerLink]="['/survey', survey.id]">
             <span>{{ survey.tag }}</span>
             <strong>{{ survey.title }}</strong>
@@ -73,7 +124,7 @@
           </a>
         }
       } @else {
-        @for (survey of surveyService.pastSurveys(); track survey.id) {
+        @for (survey of displayedSurveys(); track survey.id) {
           <div class="survey-row survey-row--past" [attr.aria-label]="survey.title + ', ended'">
             <span>{{ survey.tag }}</span>
             <strong>{{ survey.title }}</strong>

@@ -60,11 +60,43 @@
   min-height: 3.75rem;
   align-items: center;
   justify-content: center;
+  gap: 0;
+  overflow: hidden;
   padding-inline: 1.35rem;
   color: #241629;
   background: #ffcfa1;
   border-radius: 0.65rem;
   font-size: 1.35rem;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 180ms ease,
+    box-shadow 220ms ease,
+    padding 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    gap 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.create-button img {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: 0 0 auto;
+  margin-inline-start: -1.35rem;
+  opacity: 0;
+  transform: translateX(-0.25rem) scale(0.72);
+  transition:
+    margin 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 160ms ease,
+    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.create-button:hover {
+  gap: 0.72rem;
+  padding-inline-end: 1.05rem;
+}
+
+.create-button:hover img {
+  margin-inline-start: 0;
+  opacity: 1;
+  transform: translateX(0) rotate(90deg) scale(1);
 }
 
 .single-survey-layout {
@@ -177,6 +209,25 @@ h1 {
   line-height: 1.25;
 }
 
+.vote-submitted-msg {
+  margin-block-start: 0.75rem;
+  min-height: 1.35rem;
+  color: #f0902f;
+  font-family: "Mulish", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(0.3rem);
+  transition:
+    opacity 350ms ease,
+    transform 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.vote-submitted-msg--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .question-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -221,10 +272,19 @@ legend {
   grid-template-columns: 1.3rem 1.6rem minmax(0, 1fr);
   align-items: start;
   gap: 0.8rem;
+  padding: 0.18rem 0.45rem;
   color: #35273a;
+  border-radius: 0.18rem;
   font-family: "Mulish", "Segoe UI", sans-serif;
   font-size: 1.22rem;
   line-height: 1.18;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.answer-option:hover,
+.answer-option--selected {
+  background: #fee9d4;
 }
 
 .answer-option input {
@@ -251,21 +311,34 @@ legend {
   min-height: 3.05rem;
   align-items: center;
   justify-content: center;
-  gap: 0.7rem;
+  gap: 0;
+  overflow: hidden;
   padding-inline: 1.05rem;
   color: #35273a;
   background: #ffe0c3;
   border-radius: 0.6rem;
   font-size: 1.12rem;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 180ms ease,
+    box-shadow 220ms ease,
+    gap 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    padding 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .complete-button span:last-child {
-  display: none;
+  flex-shrink: 0;
   width: 1rem;
   height: 0.55rem;
+  margin-inline-start: -1rem;
   border: solid #35273a;
   border-width: 0 0 0.16rem 0.16rem;
-  transform: rotate(-45deg) translateY(-0.1rem);
+  opacity: 0;
+  transform: rotate(-45deg) translateY(-0.1rem) scale(0.7);
+  transition:
+    margin 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 160ms ease,
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .results-wrap {
@@ -297,6 +370,25 @@ legend {
   background: #ffb770;
   box-shadow: 0 0.7rem 1.25rem rgb(53 39 58 / 15%);
   transform: translateY(-0.12rem);
+}
+
+.complete-button:hover {
+  gap: 0.7rem;
+  padding-inline-end: 0.85rem;
+}
+
+.complete-button:hover span:last-child,
+.complete-button[disabled] span:last-child {
+  margin-inline-start: 0;
+  opacity: 1;
+  transform: rotate(-45deg) translateY(-0.1rem) scale(1);
+}
+
+.complete-button[disabled] {
+  gap: 0.7rem;
+  padding-inline-end: 0.85rem;
+  background: #ffb770;
+  cursor: default;
 }
 
 .results-toggle:hover {
@@ -420,7 +512,7 @@ legend {
   .answer-option {
     grid-template-columns: 1.1rem 1.35rem minmax(0, 1fr);
     gap: 0.62rem;
-    padding-inline: 0.85rem 0;
+    padding: 0.18rem 0.45rem;
     font-size: 1rem;
     overflow-wrap: anywhere;
   }
@@ -437,11 +529,6 @@ legend {
   .complete-button {
     position: static;
     margin-inline-start: auto;
-    background: #ffb770;
-  }
-
-  .complete-button span:last-child {
-    display: block;
   }
 
   .results-wrap {

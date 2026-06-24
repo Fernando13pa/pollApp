@@ -19,8 +19,10 @@
     <form
       class="survey-form"
       [class.survey-form--expanded]="hasExpandedForm()"
+      novalidate
       (submit)="$event.preventDefault(); publish()"
     >
+      <fieldset [disabled]="hasPublished()">
       <section class="survey-form__top" aria-label="Survey information">
         <div class="survey-field survey-field--name">
           <label for="survey-name">
@@ -32,8 +34,8 @@
               type="text"
               [value]="surveyTitle()"
               (input)="surveyTitle.set(inputValue($event))"
+              [attr.aria-invalid]="isSurveyTitleInvalid()"
               placeholder="Enter survey title..."
-              required
             />
             <button type="button" aria-label="Clear survey name" (click)="surveyTitle.set('')">
               <img src="asset/delete.svg" alt="" />
@@ -66,6 +68,7 @@
               inputmode="numeric"
               [value]="surveyEndDate()"
               (input)="surveyEndDate.set(inputValue($event))"
+              [attr.aria-invalid]="isEndDateInvalid()"
               placeholder="tt.mm.jjjj"
             />
             <button type="button" aria-label="Clear end date" (click)="surveyEndDate.set('')">
@@ -78,6 +81,7 @@
           <div class="category-picker">
             <button
               class="category-select"
+              [class.category-select--selected]="surveyTag()"
               type="button"
               [attr.aria-expanded]="isCategoryMenuOpen()"
               aria-haspopup="listbox"
@@ -85,24 +89,28 @@
             >
               <span>Choose category</span>
               <img
-                [src]="isCategoryMenuOpen() ? 'asset/arrow_drop_up_orange.svg' : 'asset/arrow_drop_down_white.svg'"
+                [src]="isCategoryMenuOpen() ? 'asset/arrow_drop_up_white.svg' : 'asset/arrow_drop_down_white.svg'"
                 alt=""
               />
             </button>
 
             @if (isCategoryMenuOpen()) {
-              <div class="category-options" role="listbox" aria-label="Choose category">
-              @for (cat of CATEGORIES; track cat) {
-                  <button
-                    type="button"
+              <ul class="category-options" role="listbox" aria-label="Choose category">
+                @for (cat of CATEGORIES; track cat) {
+                  <li
+                    class="category-options__item"
+                    [class.category-options__item--active]="surveyTag() === cat"
                     role="option"
+                    tabindex="0"
                     [attr.aria-selected]="surveyTag() === cat"
                     (click)="selectCategory(cat)"
+                    (keydown.enter)="selectCategory(cat)"
+                    (keydown.space)="selectCategory(cat); $event.preventDefault()"
                   >
                     {{ cat }}
-                  </button>
-              }
-              </div>
+                  </li>
+                }
+              </ul>
             }
           </div>
           <p class="selected-category" [class.selected-category--empty]="!surveyTag()">
@@ -140,6 +148,7 @@
               type="text"
               [value]="question.title"
               (input)="setQuestionTitle(qi, inputValue($event))"
+              [attr.aria-invalid]="isQuestionTitleInvalid(qi)"
               placeholder="Enter your question..."
             />
 
@@ -166,6 +175,7 @@
                   type="text"
                   [value]="answer.text"
                   (input)="setAnswerText(qi, ai, inputValue($event))"
+                  [attr.aria-invalid]="isAnswerInvalid(qi, ai)"
                   placeholder="Enter answer option..."
                 />
                 @if (question.answers.length > 2) {
@@ -193,19 +203,24 @@
         </button>
       </section>
 
-      <button class="publish-button" type="submit" [disabled]="!isValid()">
+      <button
+        class="publish-button"
+        type="submit"
+        [disabled]="hasPublished()"
+      >
         <span>Publish</span>
         <span class="publish-button__check" aria-hidden="true"></span>
       </button>
+      </fieldset>
     </form>
-  </section>
 
-  @if (showConfirm()) {
-    <div class="publish-toast" role="status" aria-live="polite">
-      <p>Your survey is now published</p>
-      <button class="publish-toast__close" type="button" aria-label="Close notification" (click)="confirmPublish()">
-        <img src="asset/close.svg" alt="" />
-      </button>
-    </div>
-  }
+    @if (showConfirm()) {
+      <div class="publish-toast" role="status" aria-live="polite">
+        <p>Your survey is now published</p>
+        <button class="publish-toast__close" type="button" aria-label="Close notification" (click)="confirmPublish()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    }
+  </section>
 </main>
