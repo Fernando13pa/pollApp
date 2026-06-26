@@ -950,3 +950,40 @@ input[aria-invalid=true] {
     transform: rotate(-45deg) translate(0.08rem, -0.08rem) scale(1.05);
   }
 }
+
+@media (max-width: 22rem) {
+  .survey-overlay {
+    padding-inline: 0.55rem;
+  }
+
+  h1 {
+    font-size: clamp(4rem, 18vw, 4.9rem);
+  }
+
+  .cancel-button {
+    width: 2.75rem;
+    min-height: 2.75rem;
+    margin-inline-end: 0.95rem;
+  }
+
+  .cancel-button img {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  .survey-form {
+    width: calc(100% - 0.75rem);
+    padding-inline: 0.65rem;
+  }
+
+  .publish-toast {
+    left: 50%;
+    width: calc(100% - 3.5rem);
+    padding-inline: 1.05rem 0.8rem;
+    transform: translateX(-50%);
+  }
+
+  .publish-toast p {
+    font-size: 1.35rem;
+  }
+}

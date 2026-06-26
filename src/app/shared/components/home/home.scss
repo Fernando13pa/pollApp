@@ -11,6 +11,10 @@
   overflow: visible;
 }
 
+.poll-page > * {
+  min-width: 0;
+}
+
 .home-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(19rem, 28rem);
@@ -248,8 +252,8 @@
 }
 
 .ending-card {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   min-height: 19.4rem;
   padding: 2.75rem 2.7rem;
   color: #35273a;
@@ -297,6 +301,7 @@
   padding: 0.18rem 0.38rem;
   color: #35273a;
   background: #ffcfa1;
+  border-radius: 0 0.55rem 0 0;
   font-family: "Mulish", "Segoe UI", sans-serif;
   font-size: 0.84rem;
   font-weight: 700;
@@ -509,6 +514,10 @@
   scrollbar-width: thin;
 }
 
+.survey-list > * {
+  min-width: 0;
+}
+
 .survey-list::-webkit-scrollbar {
   width: 0.5rem;
 }
@@ -542,6 +551,10 @@
     background-color 180ms ease;
 }
 
+.survey-row > * {
+  min-width: 0;
+}
+
 .survey-row span {
   grid-column: 1 / -1;
   grid-row: 1;
@@ -552,11 +565,13 @@
 .survey-row strong {
   grid-column: 1;
   grid-row: 2;
+  min-width: 0;
   color: #ffffff;
   font-family: "Mulish", "Segoe UI", sans-serif;
   font-size: clamp(1.25rem, 2vw, 1.7rem);
   font-weight: 900;
   line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .survey-row p {
@@ -579,6 +594,7 @@
   grid-row: 4;
   width: fit-content;
   margin: 0.2rem 0 0;
+  justify-self: end;
   white-space: nowrap;
 }
 
@@ -597,9 +613,39 @@
     justify-self: center;
   }
 
-  .ending-surveys__grid,
   .survey-list {
     grid-template-columns: 1fr;
+  }
+
+  .ending-surveys__grid {
+    display: flex;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: #ffb770 transparent;
+    padding-block-end: 0.5rem;
+  }
+
+  .ending-surveys__grid::-webkit-scrollbar {
+    height: 0.35rem;
+  }
+
+  .ending-surveys__grid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .ending-surveys__grid::-webkit-scrollbar-thumb {
+    background: #ffb770;
+    border-radius: 999rem;
+  }
+
+  .ending-card {
+    min-width: 18rem;
+    flex-shrink: 0;
+    scroll-snap-align: start;
   }
 }
 
@@ -609,6 +655,10 @@
     margin-inline: 0.875rem;
     overflow-x: hidden;
     padding-block: 2.2rem 4rem;
+  }
+
+  .ending-surveys {
+    overflow: visible;
   }
 
   .home-hero {
@@ -694,16 +744,29 @@
   .ending-surveys__grid {
     display: flex;
     gap: 1rem;
-    width: 100vw;
-    margin-inline: calc((100vw - 100%) / -2);
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
     overflow-x: auto;
-    padding-inline: calc((100vw - 100%) / 2);
+    padding-inline: 0 0.75rem;
+    padding-block-end: 0.5rem;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: #ffb770 transparent;
   }
 
   .ending-surveys__grid::-webkit-scrollbar {
-    display: none;
+    height: 0.35rem;
+  }
+
+  .ending-surveys__grid::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .ending-surveys__grid::-webkit-scrollbar-thumb {
+    background: #ffb770;
+    border-radius: 999rem;
   }
 
   .ending-card {
@@ -735,6 +798,8 @@
 
   .survey-row {
     grid-template-columns: 1fr;
+    width: calc(100% - 0.75rem);
+    justify-self: start;
     min-height: 8.45rem;
     padding: 1.05rem 1.1rem;
     border-radius: 0.25rem 3rem 0.25rem 0.25rem;
@@ -758,6 +823,12 @@
     max-height: none;
     overflow-y: visible;
     padding-inline-end: 0;
+  }
+}
+
+@media (max-width: 22rem) {
+  .poll-page {
+    margin-inline: 0.5rem;
   }
 }
 

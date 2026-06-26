@@ -507,12 +507,12 @@ legend {
   legend {
     max-width: none;
     font-size: 1.32rem;
-    text-align: center;
+    text-align: left;
     overflow-wrap: anywhere;
   }
 
   .question-card p {
-    text-align: center;
+    text-align: left;
     font-size: 0.78rem;
   }
 
@@ -542,7 +542,7 @@ legend {
     position: static;
     display: flex;
     width: fit-content;
-    margin-inline-start: auto;
+    margin-inline: auto;
   }
 
   .results-wrap {
