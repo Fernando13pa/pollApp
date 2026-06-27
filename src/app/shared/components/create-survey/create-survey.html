@@ -63,13 +63,22 @@
           </button>
           <input
             id="survey-date"
-            type="text"
-            inputmode="numeric"
+            type="date"
+            [min]="todayISO"
             [value]="surveyEndDate()"
             (input)="surveyEndDate.set(inputValue($event))"
+            (focus)="isDateFocused.set(true)"
+            (blur)="isDateFocused.set(false)"
             [attr.aria-invalid]="isEndDateInvalid()"
-            placeholder="tt.mm.jjjj"
           />
+          <p
+            class="date-error"
+            [class.date-error--visible]="showDateError()"
+            role="alert"
+            aria-live="polite"
+          >
+            Date cannot be in the past
+          </p>
         </div>
 
         <div class="survey-field survey-field--tag">

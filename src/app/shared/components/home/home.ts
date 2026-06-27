@@ -29,8 +29,8 @@ export class Home {
 
   private currentList(): Survey[] {
     return this.activeTab() === 'active'
-      ? this.surveyService.surveys()
-      : this.surveyService.pastSurveys();
+      ? this.surveyService.effectiveActiveSurveys()
+      : this.surveyService.effectivePastSurveys();
   }
 
   protected setTab(tab: 'active' | 'past'): void {

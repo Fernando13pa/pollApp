@@ -30,7 +30,7 @@ export class SurveyDetail {
       ...q,
       options: q.options.map((o) => ({
         ...o,
-        value: (selected.get(q.id) ?? []).includes(o.label) ? 1 : 0,
+        value: o.value + ((selected.get(q.id) ?? []).includes(o.label) ? 1 : 0),
       })),
     }));
   });

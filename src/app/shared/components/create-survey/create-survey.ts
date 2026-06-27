@@ -23,11 +23,13 @@ export class CreateSurvey {
   private readonly surveyService = inject(Surveys);
   private readonly router = inject(Router);
   private readonly today = this.toDateOnly(new Date());
+  readonly todayISO = `${this.today.getFullYear()}-${String(this.today.getMonth() + 1).padStart(2, '0')}-${String(this.today.getDate()).padStart(2, '0')}`;
 
   readonly surveyTitle = signal('');
   readonly surveyDescription = signal('');
   readonly surveyEndDate = signal('');
   readonly surveyTag = signal('');
+  readonly isDateFocused = signal(false);
   readonly isCategoryMenuOpen = signal(false);
   readonly showConfirm = signal(false);
   readonly hasPublished = signal(false);
@@ -55,13 +57,20 @@ export class CreateSurvey {
     return date !== null && date >= this.today;
   });
 
+  readonly showDateError = computed(
+    () =>
+      (this.publishAttempted() || this.surveyEndDate() !== '') &&
+      !this.isEndDateValid() &&
+      !this.isDateFocused(),
+  );
+
   private parseEndDate(value: string): Date | null {
-    const match = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+    const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (!match) return null;
 
-    const day = Number(match[1]);
+    const year = Number(match[1]);
     const month = Number(match[2]);
-    const year = Number(match[3]);
+    const day = Number(match[3]);
     const date = new Date(year, month - 1, day);
 
     const isRealDate =
@@ -74,6 +83,11 @@ export class CreateSurvey {
 
   private toDateOnly(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  private formatForService(isoDate: string): string {
+    const [y, m, d] = isoDate.split('-');
+    return `${d}.${m}.${y}`;
   }
 
   /** True when the title is filled and every question has a title plus at least two answers. */
@@ -226,7 +240,7 @@ export class CreateSurvey {
     this.newSurveyId = this.surveyService.createSurvey({
       title: this.surveyTitle(),
       description: this.surveyDescription(),
-      endDate: this.surveyEndDate(),
+      endDate: this.surveyEndDate() ? this.formatForService(this.surveyEndDate()) : '',
       tag: this.surveyTag() || 'Team Activities',
       questions: this.questions().map((q) => ({
         title: q.title,

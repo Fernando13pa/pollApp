@@ -166,6 +166,48 @@ fieldset {
 .survey-field--date {
   grid-column: 1;
   max-width: 16rem;
+  position: relative;
+}
+
+.date-error {
+  position: absolute;
+  bottom: -1.3rem;
+  left: 0;
+  margin: 0;
+  color: #e84c3d;
+  font-family: "Mulish", "Segoe UI", sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-0.2rem);
+  transition:
+    opacity 220ms ease,
+    transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.date-error--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 70rem) {
+  .date-error {
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+  }
+}
+
+@media (max-width: 42rem) {
+  .date-error {
+    top: auto;
+    right: auto;
+    bottom: -1.3rem;
+    left: 0;
+  }
 }
 
 label,
@@ -383,8 +425,8 @@ input[aria-invalid=true] {
 
 .question-grid {
   display: grid;
-  grid-template-columns: 26.8rem 14rem;
-  gap: 1.7rem 5.6rem;
+  grid-template-columns: 33.05rem 1fr;
+  gap: 1.7rem 3.05rem;
   align-items: start;
 }
 
@@ -689,7 +731,7 @@ input[aria-invalid=true] {
   .create-mobile-brand {
     display: inline-flex;
     width: 7.8rem;
-    margin: 4.2rem 0 4.8rem 1.45rem;
+    margin: 2rem 0 2.4rem 1.45rem;
   }
 
   .create-mobile-brand img {
@@ -759,6 +801,7 @@ input[aria-invalid=true] {
 
   .survey-field--date {
     order: 3;
+    margin-block-end: 1rem;
   }
 
   .survey-field--description {

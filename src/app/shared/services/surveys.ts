@@ -111,7 +111,7 @@ export class Surveys {
       title: "Let's Plan the Next Team Event Together",
       description: 'We want to create team activities that everyone will enjoy - share your preferences and ideas in our survey to help us plan better experiences together.',
       deadline: 'Ends in 1 Day',
-      endDate: 'Ends on 01.09.2025',
+      endDate: 'Ends on 28.06.2026',
       tag: 'Team activities',
       isUrgent: true,
       progress: 82,
@@ -123,7 +123,7 @@ export class Surveys {
       title: 'Fit & wellness survey!',
       description: 'Vote for habits and routines that support a healthier week.',
       deadline: 'Ends in 2 Days',
-      endDate: 'Ends on 08.09.2025',
+      endDate: 'Ends on 29.06.2026',
       tag: 'Health & Wellness',
       isUrgent: true,
       progress: 68,
@@ -135,7 +135,7 @@ export class Surveys {
       title: 'Gaming habits and favorite games!',
       description: 'Tell the team what you play and what should be next.',
       deadline: 'Ends in 3 Days',
-      endDate: 'Ends on 11.09.2025',
+      endDate: 'Ends on 30.06.2026',
       tag: 'Gaming & Entertainment',
       isUrgent: true,
       progress: 74,
@@ -149,8 +149,8 @@ export class Surveys {
       id: 3,
       title: "Let's Plan the Next Team Event Together",
       description: 'We want to create team activities that everyone will enjoy - share your preferences and ideas in our survey to help us plan better experiences together.',
-      deadline: 'Ends in 1 Day',
-      endDate: 'Ends on 01.09.2025',
+      deadline: 'Ends in 8 Days',
+      endDate: 'Ends on 05.07.2026',
       tag: 'Team activities',
       isUrgent: false,
       progress: 54,
@@ -161,8 +161,8 @@ export class Surveys {
       id: 4,
       title: 'Gaming habits and favorite games!',
       description: 'Tell the team what you play and what should be next.',
-      deadline: 'Ends in 3 Days',
-      endDate: 'Ends on 11.09.2025',
+      deadline: 'Ends in 13 Days',
+      endDate: 'Ends on 10.07.2026',
       tag: 'Gaming',
       isUrgent: false,
       progress: 39,
@@ -173,8 +173,8 @@ export class Surveys {
       id: 5,
       title: 'Healthier future: Fit & wellness survey!',
       description: 'Vote for habits and routines that support a healthier week.',
-      deadline: 'Ends in 2 Days',
-      endDate: 'Ends on 08.09.2025',
+      deadline: 'Ends in 18 Days',
+      endDate: 'Ends on 15.07.2026',
       tag: 'Healthy Lifestyle',
       isUrgent: false,
       progress: 72,
@@ -185,8 +185,8 @@ export class Surveys {
       id: 7,
       title: 'Workplace culture check-in',
       description: 'Share your thoughts on our office culture and how we can improve the work environment together.',
-      deadline: 'Ends in 5 Days',
-      endDate: 'Ends on 14.09.2025',
+      deadline: 'Ends in 23 Days',
+      endDate: 'Ends on 20.07.2026',
       tag: 'Workplace',
       isUrgent: false,
       progress: 64,
@@ -197,8 +197,8 @@ export class Surveys {
       id: 8,
       title: 'Remote work preferences',
       description: 'Help us shape our hybrid work policy by sharing what works best for you.',
-      deadline: 'Ends in 7 Days',
-      endDate: 'Ends on 16.09.2025',
+      deadline: 'Ends in 28 Days',
+      endDate: 'Ends on 25.07.2026',
       tag: 'Workplace',
       isUrgent: false,
       progress: 47,
@@ -209,8 +209,8 @@ export class Surveys {
       id: 9,
       title: 'Q3 team retrospective',
       description: 'Reflect on the past quarter and share what went well and what we should improve.',
-      deadline: 'Ends in 10 Days',
-      endDate: 'Ends on 19.09.2025',
+      deadline: 'Ends in 35 Days',
+      endDate: 'Ends on 01.08.2026',
       tag: 'Team activities',
       isUrgent: false,
       progress: 79,
@@ -258,9 +258,25 @@ export class Surveys {
     },
   ]);
 
+  private isActive(survey: Survey): boolean {
+    return parseEndDate(survey.endDate) > Date.now();
+  }
+
   readonly sortedUrgentSurveys = computed(() =>
-    [...this.urgentSurveys()].sort((a, b) => parseEndDate(a.endDate) - parseEndDate(b.endDate))
+    [...this.urgentSurveys()]
+      .filter((s) => this.isActive(s))
+      .sort((a, b) => parseEndDate(a.endDate) - parseEndDate(b.endDate))
   );
+
+  readonly effectiveActiveSurveys = computed(() =>
+    this.surveys().filter((s) => this.isActive(s))
+  );
+
+  readonly effectivePastSurveys = computed(() => {
+    const expiredUrgent = this.urgentSurveys().filter((s) => !this.isActive(s));
+    const expiredActive = this.surveys().filter((s) => !this.isActive(s));
+    return [...expiredUrgent, ...expiredActive, ...this.pastSurveys()];
+  });
 
   /** Returns a survey by ID, falling back to the first active survey if not found. */
   getSurveyById(id: number): Survey {
